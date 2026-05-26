@@ -1,0 +1,15 @@
+# Binaries
+nimbusapi.exe
+nimbusapi
+*.exe
+
+# Environment files
+.env
+
+# IDE files
+.vscode/
+.idea/
+
+# OS files
+.DS_Store
+Thumbs.db
