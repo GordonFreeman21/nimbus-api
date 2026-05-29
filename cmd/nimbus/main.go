@@ -19,13 +19,24 @@ func main() {
 	// Load config
 	cfg := config.Load()
 
-	// Init service and handler
+	// Init services and handlers
 	weatherSvc := services.NewWeatherService(cfg.GeocodingAPIURL, cfg.WeatherAPIURL)
 	weatherHandler := handlers.NewWeatherHandler(weatherSvc)
 
 	// Set up router with Go 1.22+ method + path routing
 	mux := http.NewServeMux()
+
+	// Species Taxonomy Endpoint (Biology)
+	speciesSvc := services.NewSpeciesService()
+	speciesHandler := handlers.NewSpeciesHandler(speciesSvc)
+
+	// Weather Endpoint
 	mux.HandleFunc("GET /api/v1/weather", weatherHandler.GetCurrentWeather)
+
+	// Species Taxonomy Endpoint
+	mux.HandleFunc("GET /api/v1/bio/species", speciesHandler.GetSpeciesTaxonomy)
+
+	// Health Check
 	mux.HandleFunc("GET /health", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusOK)
@@ -47,8 +58,9 @@ func main() {
 
 	// Cloud-themed startup logs
 	log.Printf("☁️  NimbusAPI starting on port %s", port)
-	log.Printf("🌤️  Weather endpoint: GET /api/v1/weather?city=Berlin")
-	log.Printf("✅ Health check: GET /health")
+	log.Printf("🌤️  Weather endpoint:     GET /api/v1/weather?city=Berlin")
+	log.Printf("🧬 Species endpoint:     GET /api/v1/bio/species?name=Blue+Whale")
+	log.Printf("✅ Health check:         GET /health")
 
 	// Run server in goroutine
 	go func() {

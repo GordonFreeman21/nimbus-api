@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: nimbus-api
+    runtime: go
+    plan: free
+    buildCommand: go build -o bin/server ./cmd/nimbus
+    startCommand: ./bin/server
+    envVars:
+      - key: PORT
+        value: 10000

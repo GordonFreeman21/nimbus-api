@@ -1,29 +1,92 @@
-# NimbusAPI
+# Nimbus API
 
-A lightweight weather API built in Go that fetches real-time weather data from [Open-Meteo](https://open-meteo.com/) and returns clean, human-readable JSON responses with playful weather messages.
+**Lightweight, open-source APIs built with Go.**  
+No paywalls. No signup. No BS.
 
-## Features
+Nimbus is a small developer studio from Niedersachsen, Germany. We build APIs, tools, and apps — if it's useful and can be open source, we'll build it.
 
-- City-based weather lookup via geocoding + forecast APIs
-- Temperature, humidity, wind speed, and condition descriptions
-- Fun "Nimbus messages" based on current conditions
-- Request logging middleware with response times
-- Health check endpoint
-- Graceful shutdown handling
-- `.env` support via `godotenv`
+## Philosophy
+
+- **Built with Go** — Single binary. Minimal memory. Deploys in seconds. Fast and boring.
+- **Forever Free** — No "free trial." No "basic plan." No credit card required. Free means free.
+- **Open Source** — Every line of code is public. Read it, fork it, ship your own version.
+- **No BS** — No signup walls, no dashboard you don't need, no email just to try something.
+
+## API Endpoints
+
+### `GET /api/v1/weather?city={city}`
+
+Returns current weather for a city. No API key needed.
+
+| Field | Description |
+|-------|-------------|
+| `city` | City name |
+| `temp_celsius` | Current temperature in °C |
+| `humidity_percent` | Relative humidity |
+| `wind_speed_kmh` | Wind speed |
+| `description` | Human-readable weather description |
+| `nimbus_message` | Playful weather message |
+
+```bash
+curl "https://nimbus-api.com/api/v1/weather?city=Berlin"
+```
+
+### `GET /api/v1/bio/species?name={name}`
+
+Search for any animal or plant by common name and get its full scientific taxonomic hierarchy (kingdom, phylum, class, order, family). Powered by the GBIF Species API.
+
+| Field | Description |
+|-------|-------------|
+| `common_name` | The name you searched for |
+| `scientific_name` | Accepted scientific name |
+| `kingdom` | Taxonomic kingdom |
+| `phylum` | Taxonomic phylum |
+| `class` | Taxonomic class |
+| `order` | Taxonomic order |
+| `family` | Taxonomic family |
+
+```bash
+curl "https://nimbus-api.com/api/v1/bio/species?name=Blue+Whale"
+```
+
+**Response:**
+```json
+{
+  "common_name": "Blue Whale",
+  "scientific_name": "Balaenoptera musculus",
+  "kingdom": "Animalia",
+  "phylum": "Chordata",
+  "class": "Mammalia",
+  "order": "Cetacea",
+  "family": "Balaenopteridae"
+}
+```
+
+### `GET /api/v1/geocode?city={city}` — *Coming soon*
+
+### `GET /health`
+
+Returns `{"status": "ok"}`.
 
 ## Project Structure
 
 ```
 nimbus-api/
-├── cmd/nimbus/main.go          # Entry point, server setup
+├── cmd/nimbus/main.go           # Entry point, server setup
 ├── internal/
-│   ├── config/config.go        # Environment & config loading
-│   ├── handler/weather.go      # HTTP handlers
+│   ├── config/config.go         # Environment & config loading
+│   ├── handler/
+│   │   ├── weather.go           # Weather HTTP handlers
+│   │   └── species.go           # Species taxonomy handlers
 │   ├── middleware/logger.go     # Request logging middleware
-│   ├── models/weather.go       # Data structures
-│   └── services/weather.go     # Business logic & API calls
+│   ├── models/
+│   │   ├── weather.go           # Weather & error data structures
+│   │   └── species.go           # Species taxonomy data structures
+│   └── services/
+│       ├── weather.go           # Weather business logic & API calls
+│       └── species.go           # GBIF species lookup logic
 ├── go.mod
+├── render.yaml                  # Render.com deployment config
 └── .gitignore
 ```
 
@@ -33,50 +96,29 @@ nimbus-api/
 
 - Go 1.22+
 
-### Run
+### Run locally
 
 ```bash
+git clone https://github.com/GordonFreeman21/nimbus-api.git
+cd nimbus-api
 go run ./cmd/nimbus
 ```
 
-The server starts on port `8080` by default. Override with a `PORT` environment variable or a `.env` file.
-
-### Example `.env`
+The server starts on port `8080` by default. Override with a `PORT` environment variable or a `.env` file:
 
 ```
 PORT=3000
 ```
 
-## API Endpoints
+## Deployment
 
-### `GET /api/v1/weather?city={city}`
+This project includes a `render.yaml` for one-click deploy on [Render](https://render.com).
 
-Returns current weather for the given city.
+## Contact
 
-**Response:**
-
-```json
-{
-  "city": "Berlin",
-  "temp_celsius": 18.5,
-  "humidity_percent": 62,
-  "wind_speed_kmh": 12.3,
-  "description": "Mainly clear, partly cloudy, or overcast",
-  "nimbus_message": "🌤️ Nimbus says: Enjoy the weather!"
-}
-```
-
-**Errors:**
-
-| Status | Meaning |
-|--------|---------|
-| 400 | Missing `city` parameter |
-| 404 | City not found |
-| 500 | Upstream API failure |
-
-### `GET /health`
-
-Returns `{"status": "ok"}`.
+- **Email:** kareemharimech7@gmail.com
+- **Discord:** [Join the server](https://discord.gg/nimbus)
+- **GitHub:** [GordonFreeman21/nimbus-api](https://github.com/GordonFreeman21/nimbus-api)
 
 ## License
 
