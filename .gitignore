@@ -2,6 +2,7 @@
 nimbusapi*
 bin/
 *.exe
+!docs/download/*.exe
 
 # Environment files
 .env
