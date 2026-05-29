@@ -23,7 +23,7 @@ jobs:
             name: macos
             ext: ""
             archive: nimbus-tester-macos.tar.gz
-          - os: ubuntu-latest
+          - os: ubuntu-22.04
             name: linux
             ext: ""
             archive: nimbus-tester-linux.tar.gz
@@ -37,7 +37,7 @@ jobs:
           go-version: "1.22"
 
       - name: Install Linux deps
-        if: matrix.os == 'ubuntu-latest'
+        if: matrix.os == 'ubuntu-22.04'
         run: |
           sudo apt-get update
           sudo apt-get install -y libwebkit2gtk-4.0-dev build-essential
@@ -60,7 +60,7 @@ jobs:
           tar czf nimbus-tester-macos.tar.gz nimbus-tester
 
       - name: Package Linux
-        if: matrix.os == 'ubuntu-latest'
+        if: matrix.os == 'ubuntu-22.04'
         run: |
           cd docs/download
           tar czf nimbus-tester-linux.tar.gz nimbus-tester
