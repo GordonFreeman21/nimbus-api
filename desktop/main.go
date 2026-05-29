@@ -4,47 +4,86 @@ import (
 	"embed"
 	"fmt"
 	"net/http"
-	"os"
-	"os/exec"
-	"runtime"
+	"net/url"
+	"strings"
+	"time"
+
+	webview "github.com/webview/webview_go"
 )
 
 //go:embed static/index.html
-var staticFS embed.FS
+var uiFS embed.FS
 
 func main() {
+	// Start local API proxy on a random available port
 	port := "8899"
+	go func() {
+		http.HandleFunc("/", serveUI)
+		http.HandleFunc("/api/", proxyAPI)
+		http.ListenAndServe(":"+port, nil)
+	}()
 
-	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Content-Type", "text/html; charset=utf-8")
-		data, _ := staticFS.ReadFile("static/index.html")
-		w.Write(data)
-	})
+	time.Sleep(500 * time.Millisecond)
 
-	// Open in default browser
-	url := fmt.Sprintf("http://localhost:%s", port)
-	openBrowser(url)
+	w := webview.New(true)
+	defer w.Destroy()
+	w.SetTitle("Nimbus API Tester")
+	w.SetSize(960, 700, webview.HintNone)
+	w.Navigate(fmt.Sprintf("http://localhost:%s", port))
+	w.Run()
+}
 
-	fmt.Printf("☁️ Nimbus API Tester running at %s\n", url)
-	fmt.Println("Close this terminal to exit.")
+func serveUI(w http.ResponseWriter, r *http.Request) {
+	data, _ := uiFS.ReadFile("static/index.html")
+	w.Header().Set("Content-Type", "text/html; charset=utf-8")
+	w.Write(data)
+}
 
-	if err := http.ListenAndServe(":"+port, nil); err != nil {
-		fmt.Fprintf(os.Stderr, "Server failed: %v\n", err)
-		os.Exit(1)
+func proxyAPI(w http.ResponseWriter, r *http.Request) {
+	// Proxy requests to the live Nimbus API
+	target := "https://nimbus-api-gxuc.onrender.com" + r.URL.Path
+	if r.URL.RawQuery != "" {
+		target += "?" + r.URL.RawQuery
+	}
+
+	// Validate the URL
+	parsed, err := url.Parse(target)
+	if err != nil {
+		http.Error(w, "invalid url", http.StatusBadRequest)
+		return
+	}
+	if parsed.Scheme != "https" && parsed.Scheme != "http" {
+		http.Error(w, "invalid scheme", http.StatusBadRequest)
+		return
+	}
+
+	client := &http.Client{Timeout: 30 * time.Second}
+	resp, err := client.Get(target)
+	if err != nil {
+		http.Error(w, "request failed: "+err.Error(), http.StatusBadGateway)
+		return
+	}
+	defer resp.Body.Close()
+
+	// Copy headers
+	for k, v := range resp.Header {
+		w.Header()[k] = v
+	}
+	w.WriteHeader(resp.StatusCode)
+
+	// Stream the response body
+	buf := make([]byte, 32*1024)
+	for {
+		n, err := resp.Body.Read(buf)
+		if n > 0 {
+			w.Write(buf[:n])
+		}
+		if err != nil {
+			break
+		}
 	}
 }
 
-func openBrowser(url string) {
-	var cmd *exec.Cmd
-	switch runtime.GOOS {
-	case "windows":
-		cmd = exec.Command("cmd", "/c", "start", url)
-	case "darwin":
-		cmd = exec.Command("open", url)
-	default:
-		cmd = exec.Command("xdg-open", url)
-	}
-	cmd.Stdout = os.Stdout
-	cmd.Stderr = os.Stderr
-	cmd.Run()
+func isImageType(contentType string) bool {
+	return strings.HasPrefix(contentType, "image/")
 }
