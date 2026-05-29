@@ -1,177 +1,359 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nimbus API Tester</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=SF+Mono:wght@400;500&display=swap" rel="stylesheet">
-    <style>
-        *{margin:0;padding:0;box-sizing:border-box}
-        :root{--bg:#050a18;--card:#0c1220;--border:rgba(255,255,255,.05);--text:#b0bdd0;--text-dim:#5a6a8a;--accent:#60a5fa;--accent2:#a78bfa;--success:#34d399;--error:#f87171}
-        body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding:0;display:flex;justify-content:center;align-items:flex-start}
-        .app{width:100%;max-width:900px;padding:40px 20px}
-        .header{text-align:center;margin-bottom:40px}
-        .logo{display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:12px}
-        .logo-icon{width:40px;height:40px;background:linear-gradient(135deg,var(--accent),var(--accent2));border-radius:10px;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 12px rgba(96,165,250,.3)}
-        .logo h1{font-size:1.5rem;font-weight:700;color:#fff;font-family:'Space Grotesk',sans-serif}
-        .subtitle{color:var(--text-dim);font-size:.9rem}
-        .card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:24px;margin-bottom:20px}
-        .endpoint-select{display:flex;gap:12px;margin-bottom:16px;flex-wrap:wrap}
-        .btn{padding:10px 18px;border:none;border-radius:8px;font-size:.82rem;font-weight:600;cursor:pointer;transition:all .2s;color:#fff}
-        .btn-primary{background:linear-gradient(135deg,var(--accent),var(--accent2));box-shadow:0 2px 12px rgba(99,102,241,.3)}
-        .btn-primary:hover{transform:translateY(-1px);box-shadow:0 4px 20px rgba(99,102,241,.4)}
-        .btn-secondary{background:rgba(255,255,255,.05);border:1px solid var(--border)}
-        .btn-secondary:hover{background:rgba(255,255,255,.1)}
-        .btn-success{background:linear-gradient(135deg,var(--success),#22c55e)}
-        .input-group{display:flex;gap:12px;margin-bottom:16px}
-        .input{flex:1;background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:8px;padding:12px 16px;color:#fff;font-size:.9rem;font-family:'Inter',sans-serif;outline:none;transition:border-color .2s}
-        .input:focus{border-color:var(--accent)}
-        .input::placeholder{color:var(--text-dim)}
-        .select{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:12px 16px;color:var(--text);font-size:.9rem;cursor:pointer;outline:none}
-        .response-area{position:relative}
-        .response-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
-        .response-title{font-size:.85rem;font-weight:600;color:var(--text)}
-        .code{background:#080e1a;border:1px solid var(--border);border-radius:8px;padding:16px;font-family:'SF Mono','Fira Code',monospace;font-size:.78rem;line-height:1.6;color:#8899b4;white-space:pre-wrap;word-break:break-all;min-height:120px;overflow-y:auto;max-height:400px}
-        .code.success{border-color:rgba(52,211,153,.2);color:#a7f3d0}
-        .code.error{border-color:rgba(248,113,113,.2);color:#fca5a5}
-        .loading{display:flex;align-items:center;gap:8px;color:var(--accent)}
-        .spinner{width:16px;height:16px;border:2px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin 1s linear infinite}
-        @keyframes spin{to{transform:rotate(360deg)}}
-        .toast{position:fixed;bottom:20px;right:20px;background:var(--card);border:1px solid var(--success);color:var(--success);padding:12px 20px;border-radius:10px;font-size:.85rem;font-weight:500;opacity:0;transform:translateY(10px);transition:all .3s;pointer-events:none}
-        .toast.show{opacity:1;transform:translateY(0)}
-        .footer{text-align:center;margin-top:40px;color:var(--text-dim);font-size:.75rem}
-        .footer a{color:var(--accent);text-decoration:none}
-    </style>
-</head>
-<body>
-    <div class="app">
-        <div class="header">
-            <div class="logo">
-                <div class="logo-icon">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/></svg>
-                </div>
-                <h1>Nimbus API Tester</h1>
-            </div>
-            <p class="subtitle">Test all Nimbus endpoints from one clean interface</p>
-        </div>
-
-        <div class="card">
-            <div class="endpoint-select">
-                <button class="btn btn-primary" onclick="setEndpoint('weather')">☁️ Weather</button>
-                <button class="btn btn-secondary" onclick="setEndpoint('species')">🧬 Species</button>
-                <button class="btn btn-secondary" onclick="setEndpoint('screenshot')">📸 Screenshot</button>
-            </div>
-            <div class="input-group">
-                <input type="text" class="input" id="urlInput" placeholder="Enter city, species name, or website URL..." value="Berlin">
-                <select class="select" id="protocol">
-                    <option value="https">https://</option>
-                    <option value="http">http://</option>
-                </select>
-            </div>
-            <div class="input-group">
-                <input type="text" class="input" id="apiBase" value="nimbus-api-gxuc.onrender.com" placeholder="api.example.com">
-                <button class="btn btn-success" onclick="makeRequest()" id="sendBtn">Send Request</button>
-            </div>
-        </div>
-
-        <div class="card response-area">
-            <div class="response-header">
-                <span class="response-title">Response</span>
-                <div style="display:flex;gap:8px">
-                    <button class="btn btn-secondary" onclick="copyResponse()" id="copyBtn" style="display:none">📋 Copy</button>
-                    <span class="response-title" id="status" style="display:none"></span>
-                </div>
-            </div>
-            <div class="code" id="response">Click "Send Request" to test an API endpoint...</div>
-        </div>
-
-        <div class="toast" id="toast">Copied to clipboard!</div>
-        <div class="footer">Built with Go · Open Source · <a href="https://github.com/GordonFreeman21/nimbus-api" target="_blank">GitHub</a></div>
-    </div>
-
-    <script>
-        let currentEndpoint = 'weather';
-        let lastResponse = '';
-
-        function setEndpoint(ep) {
-            currentEndpoint = ep;
-            document.querySelectorAll('.endpoint-select .btn').forEach(b => {
-                b.classList.remove('btn-primary');
-                b.classList.add('btn-secondary');
-            });
-            event.target.classList.add('btn-primary');
-            event.target.classList.remove('btn-secondary');
-            const input = document.getElementById('urlInput');
-            if (ep === 'weather') input.placeholder = 'Enter city name...';
-            else if (ep === 'species') input.placeholder = 'Enter species name...';
-            else input.placeholder = 'Enter website URL (https://...)';
-        }
-
-        async function makeRequest() {
-            const value = document.getElementById('urlInput').value.trim();
-            if (!value) return alert('Please enter a value');
-            const protocol = document.getElementById('protocol').value;
-            const apiBase = document.getElementById('apiBase').value.trim();
-            const url = `${protocol}://${apiBase}/api/v1/${currentEndpoint}${currentEndpoint === 'screenshot' ? `?url=${encodeURIComponent(value)}` : `?${currentEndpoint === 'species' ? 'name' : 'city'}=${encodeURIComponent(value)}`}`;
-
-            const responseEl = document.getElementById('response');
-            const sendBtn = document.getElementById('sendBtn');
-            const status = document.getElementById('status');
-            const copyBtn = document.getElementById('copyBtn');
-
-            responseEl.className = 'code';
-            responseEl.innerHTML = '<div class="loading"><div class="spinner"></div>Fetching...</div>';
-            sendBtn.disabled = true;
-            status.style.display = 'none';
-            copyBtn.style.display = 'none';
-
-            try {
-                const startTime = Date.now();
-                const response = await fetch(url);
-                const duration = Date.now() - startTime;
-                status.textContent = `${response.status} (${duration}ms)`;
-                status.style.display = 'block';
-                status.style.color = response.ok ? '#34d399' : '#f87171';
-
-                if (currentEndpoint === 'screenshot') {
-                    if (response.ok) {
-                        const blob = await response.blob();
-                        const imgUrl = URL.createObjectURL(blob);
-                        responseEl.innerHTML = `<img src="${imgUrl}" style="max-width:100%;border-radius:8px;max-height:300px">`;
-                        responseEl.className = 'code success';
-                        lastResponse = 'Screenshot captured successfully';
-                        copyBtn.style.display = 'inline-block';
-                    } else {
-                        const text = await response.text();
-                        responseEl.textContent = text || 'Failed to capture screenshot';
-                        responseEl.className = 'code error';
-                    }
-                } else {
-                    const data = await response.json();
-                    lastResponse = JSON.stringify(data, null, 2);
-                    responseEl.textContent = lastResponse;
-                    responseEl.className = response.ok ? 'code success' : 'code error';
-                    copyBtn.style.display = 'inline-block';
-                }
-            } catch (err) {
-                responseEl.textContent = `Error: ${err.message}`;
-                responseEl.className = 'code error';
-            } finally {
-                sendBtn.disabled = false;
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Nimbus</title>
+        <style>
+            @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap");
+            *,
+            *::before,
+            *::after {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
             }
-        }
+            :root {
+                --bg: #020617;
+                --surface: #0f172a;
+                --surface2: #1e293b;
+                --border: #334155;
+                --text: #f1f5f9;
+                --muted: #94a3b8;
+                --accent: #3b82f6;
+                --accent-glow: rgba(59, 130, 246, 0.15);
+                --success: #22c55e;
+                --error: #ef4444;
+            }
+            body {
+                font-family: "Inter", system-ui, sans-serif;
+                background: var(--bg);
+                color: var(--text);
+                min-height: 100vh;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: 24px;
+            }
+            .wrap {
+                width: 100%;
+                max-width: 640px;
+            }
+            .brand {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                margin-bottom: 32px;
+            }
+            .brand svg {
+                width: 32px;
+                height: 32px;
+                flex-shrink: 0;
+            }
+            .brand h1 {
+                font-size: 1.25rem;
+                font-weight: 700;
+                letter-spacing: -0.02em;
+            }
+            .tabs {
+                display: flex;
+                gap: 4px;
+                background: var(--surface);
+                border-radius: 12px;
+                padding: 4px;
+                margin-bottom: 16px;
+            }
+            .tab {
+                flex: 1;
+                padding: 10px;
+                border: none;
+                background: transparent;
+                color: var(--muted);
+                font-size: 0.82rem;
+                font-weight: 600;
+                cursor: pointer;
+                border-radius: 9px;
+                transition: all 0.2s;
+            }
+            .tab:hover {
+                color: var(--text);
+            }
+            .tab.on {
+                background: var(--accent);
+                color: #fff;
+                box-shadow: 0 2px 12px var(--accent-glow);
+            }
+            .card {
+                background: var(--surface);
+                border: 1px solid var(--border);
+                border-radius: 16px;
+                padding: 20px;
+                margin-bottom: 12px;
+            }
+            .input-row {
+                display: flex;
+                gap: 10px;
+            }
+            .input {
+                flex: 1;
+                background: var(--surface2);
+                border: 1px solid var(--border);
+                border-radius: 10px;
+                padding: 12px 14px;
+                color: var(--text);
+                font-size: 0.88rem;
+                font-family: inherit;
+                outline: none;
+                transition: border-color 0.2s;
+            }
+            .input::placeholder {
+                color: var(--muted);
+            }
+            .input:focus {
+                border-color: var(--accent);
+            }
+            .btn {
+                background: var(--accent);
+                color: #fff;
+                border: none;
+                border-radius: 10px;
+                padding: 12px 20px;
+                font-size: 0.82rem;
+                font-weight: 600;
+                cursor: pointer;
+                transition: all 0.2s;
+                white-space: nowrap;
+            }
+            .btn:hover {
+                box-shadow: 0 4px 16px var(--accent-glow);
+                transform: translateY(-1px);
+            }
+            .btn:disabled {
+                opacity: 0.5;
+                cursor: not-allowed;
+                transform: none;
+            }
+            .result {
+                background: var(--surface);
+                border: 1px solid var(--border);
+                border-radius: 16px;
+                overflow: hidden;
+                min-height: 180px;
+            }
+            .result-head {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 12px 16px;
+                border-bottom: 1px solid var(--border);
+                font-size: 0.75rem;
+                color: var(--muted);
+            }
+            .result-body {
+                padding: 16px;
+                font-size: 0.8rem;
+                line-height: 1.7;
+                color: var(--muted);
+                white-space: pre-wrap;
+                word-break: break-word;
+                max-height: 320px;
+                overflow-y: auto;
+                font-family: "SF Mono", Consolas, monospace;
+            }
+            .result-body img {
+                max-width: 100%;
+                border-radius: 8px;
+            }
+            .badge {
+                display: inline-flex;
+                align-items: center;
+                gap: 4px;
+                padding: 2px 8px;
+                border-radius: 6px;
+                font-size: 0.68rem;
+                font-weight: 600;
+            }
+            .badge.ok {
+                background: rgba(34, 197, 94, 0.1);
+                color: var(--success);
+            }
+            .badge.err {
+                background: rgba(239, 68, 68, 0.1);
+                color: var(--error);
+            }
+            .copy {
+                background: var(--surface2);
+                border: 1px solid var(--border);
+                color: var(--muted);
+                padding: 4px 10px;
+                border-radius: 6px;
+                font-size: 0.68rem;
+                cursor: pointer;
+                transition: all 0.2s;
+            }
+            .copy:hover {
+                color: var(--text);
+                border-color: var(--accent);
+            }
+            .hint {
+                text-align: center;
+                margin-top: 12px;
+                font-size: 0.72rem;
+                color: var(--muted);
+            }
+            .hint a {
+                color: var(--accent);
+                text-decoration: none;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="wrap">
+            <div class="brand">
+                <svg viewBox="0 0 32 32" fill="none">
+                    <defs>
+                        <linearGradient id="g" x1="0" y1="0" x2="32" y2="32">
+                            <stop offset="0%" stop-color="#60a5fa" />
+                            <stop offset="100%" stop-color="#a78bfa" />
+                        </linearGradient>
+                    </defs>
+                    <rect width="32" height="32" rx="8" fill="url(#g)" />
+                    <path
+                        d="M22 20H11a5.5 5.5 0 0 1-.8-10.95A7 7 0 0 1 22.5 13H23a4.5 4.5 0 0 1 0 9h-1z"
+                        fill="#fff"
+                        opacity=".95"
+                    />
+                </svg>
+                <h1>Nimbus</h1>
+            </div>
 
-        function copyResponse() {
-            navigator.clipboard.writeText(lastResponse);
-            const toast = document.getElementById('toast');
-            toast.classList.add('show');
-            setTimeout(() => toast.classList.remove('show'), 2000);
-        }
+            <div class="tabs">
+                <button class="tab on" onclick="pick('weather', this)">
+                    ☁️ Weather
+                </button>
+                <button class="tab" onclick="pick('species', this)">
+                    🧬 Species
+                </button>
+                <button class="tab" onclick="pick('screenshot', this)">
+                    📸 Screenshot
+                </button>
+            </div>
 
-        document.getElementById('urlInput').addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') makeRequest();
-        });
-    </script>
-</body>
+            <div class="card">
+                <div class="input-row">
+                    <input
+                        class="input"
+                        id="q"
+                        placeholder="City name…"
+                        value="Berlin"
+                    />
+                    <button class="btn" id="go" onclick="fire()">Send</button>
+                </div>
+            </div>
+
+            <div class="result">
+                <div class="result-head">
+                    <span id="stat">Ready</span>
+                    <button
+                        class="copy"
+                        id="cp"
+                        onclick="cp()"
+                        style="display: none"
+                    >
+                        Copy
+                    </button>
+                </div>
+                <div class="result-body" id="out">
+                    Click <b>Send</b> or press <b>Enter</b> to test an endpoint.
+                </div>
+            </div>
+
+            <div class="hint">
+                Open source on
+                <a
+                    href="https://github.com/GordonFreeman21/nimbus-api"
+                    target="_blank"
+                    >GitHub</a
+                >
+            </div>
+        </div>
+
+        <script>
+            const API = "https://nimbus-api-gxuc.onrender.com";
+            let ep = "weather",
+                last = "";
+            const q = document.getElementById("q"),
+                out = document.getElementById("out"),
+                stat = document.getElementById("stat"),
+                go = document.getElementById("go"),
+                cp = document.getElementById("cp");
+
+            function pick(e, b) {
+                ep = e;
+                document
+                    .querySelectorAll(".tab")
+                    .forEach((t) => t.classList.remove("on"));
+                b.classList.add("on");
+                q.placeholder =
+                    e === "weather"
+                        ? "City name…"
+                        : e === "species"
+                          ? "Species name…"
+                          : "https://example.com";
+                q.focus();
+            }
+
+            async function fire() {
+                const v = q.value.trim();
+                if (!v) return;
+                const url =
+                    ep === "screenshot"
+                        ? `${API}/api/v1/screenshot?url=${encodeURIComponent(v)}`
+                        : `${API}/api/v1/${ep}?${ep === "species" ? "name" : "city"}=${encodeURIComponent(v)}`;
+                go.disabled = true;
+                out.textContent = "Loading…";
+                stat.textContent = "…";
+                cp.style.display = "none";
+                const t0 = Date.now();
+                try {
+                    const r = await fetch(url);
+                    const ms = Date.now() - t0;
+                    if (ep === "screenshot") {
+                        if (r.ok) {
+                            const b = await r.blob();
+                            const i = URL.createObjectURL(b);
+                            out.innerHTML = `<img src="${i}">`;
+                            last = "Screenshot OK";
+                        } else {
+                            const t = await r.text();
+                            out.textContent = t || "Error";
+                            stat.className = "badge err";
+                        }
+                    } else {
+                        const d = await r.json();
+                        last = JSON.stringify(d, null, 2);
+                        out.textContent = last;
+                    }
+                    stat.textContent = `${r.status} · ${ms}ms`;
+                    stat.className = r.ok ? "badge ok" : "badge err";
+                    cp.style.display = "";
+                } catch (e) {
+                    out.textContent = e.message;
+                    stat.textContent = "Error";
+                    stat.className = "badge err";
+                } finally {
+                    go.disabled = false;
+                }
+            }
+
+            function cp() {
+                navigator.clipboard.writeText(last);
+                cp.textContent = "✓";
+                setTimeout(() => (cp.textContent = "Copy"), 1200);
+            }
+            q.onkeypress = (e) => {
+                if (e.key === "Enter") fire();
+            };
+        </script>
+    </body>
 </html>

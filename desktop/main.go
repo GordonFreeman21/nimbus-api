@@ -15,7 +15,7 @@ import (
 var uiFS embed.FS
 
 func main() {
-	// Start local API proxy on a random available port
+	// Start local server with proxy to avoid CORS
 	port := "8899"
 	go func() {
 		http.HandleFunc("/", serveUI)
@@ -27,8 +27,8 @@ func main() {
 
 	w := webview.New(true)
 	defer w.Destroy()
-	w.SetTitle("Nimbus API Tester")
-	w.SetSize(960, 700, webview.HintNone)
+	w.SetTitle("Nimbus")
+	w.SetSize(680, 580, webview.HintNone)
 	w.Navigate(fmt.Sprintf("http://localhost:%s", port))
 	w.Run()
 }
