@@ -30,11 +30,18 @@ func main() {
 	speciesSvc := services.NewSpeciesService()
 	speciesHandler := handlers.NewSpeciesHandler(speciesSvc)
 
+	// Screenshot Endpoint (Utility)
+	screenshotSvc := services.NewScreenshotService()
+	screenshotHandler := handlers.NewScreenshotHandler(screenshotSvc)
+
 	// Weather Endpoint
 	mux.HandleFunc("GET /api/v1/weather", weatherHandler.GetCurrentWeather)
 
 	// Species Taxonomy Endpoint
 	mux.HandleFunc("GET /api/v1/bio/species", speciesHandler.GetSpeciesTaxonomy)
+
+	// Screenshot Endpoint
+	mux.HandleFunc("GET /api/v1/screenshot", screenshotHandler.CaptureScreenshot)
 
 	// Health Check
 	mux.HandleFunc("GET /health", func(w http.ResponseWriter, r *http.Request) {
@@ -60,6 +67,7 @@ func main() {
 	log.Printf("☁️  NimbusAPI starting on port %s", port)
 	log.Printf("🌤️  Weather endpoint:     GET /api/v1/weather?city=Berlin")
 	log.Printf("🧬 Species endpoint:     GET /api/v1/bio/species?name=Blue+Whale")
+	log.Printf("📸 Screenshot endpoint:  GET /api/v1/screenshot?url=https://example.com")
 	log.Printf("✅ Health check:         GET /health")
 
 	// Run server in goroutine

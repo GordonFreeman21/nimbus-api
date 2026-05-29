@@ -62,6 +62,24 @@ curl "https://nimbus-api.com/api/v1/bio/species?name=Blue+Whale"
 }
 ```
 
+### `GET /api/v1/screenshot?url={url}`
+
+Captures a real-time PNG screenshot of any public website. Uses headless Chrome via chromedp.
+
+| Parameter | Description |
+|-----------|-------------|
+| `url` | Full URL starting with `http://` or `https://` |
+
+```bash
+curl "https://nimbus-api.com/api/v1/screenshot?url=https://example.com" --output screenshot.png
+```
+
+**Notes:**
+- Returns raw `image/png` binary data
+- Full-page screenshot (viewport 1920×1080)
+- 30-second timeout per request
+- Requires Chrome/Chromium installed locally
+
 ### `GET /api/v1/geocode?city={city}` — *Coming soon*
 
 ### `GET /health`
@@ -77,14 +95,16 @@ nimbus-api/
 │   ├── config/config.go         # Environment & config loading
 │   ├── handler/
 │   │   ├── weather.go           # Weather HTTP handlers
-│   │   └── species.go           # Species taxonomy handlers
+│   │   ├── species.go           # Species taxonomy handlers
+│   │   └── screenshot.go        # Website screenshot handler
 │   ├── middleware/logger.go     # Request logging middleware
 │   ├── models/
 │   │   ├── weather.go           # Weather & error data structures
 │   │   └── species.go           # Species taxonomy data structures
 │   └── services/
 │       ├── weather.go           # Weather business logic & API calls
-│       └── species.go           # GBIF species lookup logic
+│       ├── species.go           # GBIF species lookup logic
+│       └── screenshot.go        # Chrome screenshot logic
 ├── go.mod
 ├── render.yaml                  # Render.com deployment config
 └── .gitignore
