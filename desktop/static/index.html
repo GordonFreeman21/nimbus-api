@@ -306,10 +306,14 @@
             async function fire() {
                 const v = q.value.trim();
                 if (!v) return;
+                // Auto-detect: if input looks like a URL, use screenshot endpoint
+                const isUrl =
+                    v.startsWith("http://") || v.startsWith("https://");
+                const targetEp = isUrl ? "screenshot" : ep;
                 const url =
-                    ep === "screenshot"
+                    targetEp === "screenshot"
                         ? `${API}/api/v1/screenshot?url=${encodeURIComponent(v)}`
-                        : `${API}/api/v1/${ep}?${ep === "species" ? "name" : "city"}=${encodeURIComponent(v)}`;
+                        : `${API}/api/v1/${targetEp}?${targetEp === "species" ? "name" : "city"}=${encodeURIComponent(v)}`;
                 go.disabled = true;
                 out.textContent = "Loading…";
                 stat.textContent = "…";
@@ -318,7 +322,7 @@
                 try {
                     const r = await fetch(url);
                     const ms = Date.now() - t0;
-                    if (ep === "screenshot") {
+                    if (targetEp === "screenshot") {
                         if (r.ok) {
                             const b = await r.blob();
                             const i = URL.createObjectURL(b);
