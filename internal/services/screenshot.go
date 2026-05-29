@@ -3,10 +3,10 @@ package services
 import (
 	"context"
 	"fmt"
-	"log"
 	"math/rand"
 	"time"
 
+	"github.com/chromedp/cdproto/emulation"
 	"github.com/chromedp/chromedp"
 )
 
@@ -26,54 +26,44 @@ func (s *ScreenshotService) TakeScreenshot(ctx context.Context, targetURL string
 	ctx, cancel := context.WithTimeout(ctx, 30*time.Second)
 	defer cancel()
 
-	// Create a new headless browser session with stealth options.
-	opts := []chromedp.ContextOption{
-		chromedp.NewContext(ctx),
-		chromedp.WithLogf(log.Printf),
-	}
-
-	// Add browser options to evade detection.
-	ctx, cancel = chromedp.NewExecAllocator(ctx,
+	// Create a headless browser allocator with stealth flags.
+	allocCtx, allocCancel := chromedp.NewExecAllocator(ctx,
 		chromedp.Flag("headless", true),
 		chromedp.Flag("disable-blink-features", "AutomationControlled"),
 		chromedp.Flag("disable-features", "IsolateOrigins,site-per-process"),
 		chromedp.Flag("disable-extensions", true),
-		chromedp.Flag("disable-web-security", true),
 		chromedp.Flag("no-sandbox", true),
 		chromedp.Flag("disable-dev-shm-usage", true),
 		chromedp.Flag("disable-gpu", true),
 		chromedp.Flag("window-size", "1920,1080"),
 	)
-	defer cancel()
+	defer allocCancel()
 
-	// Create a new context for the page.
-	ctx, cancel = chromedp.NewContext(ctx, opts...)
-	defer cancel()
+	// Create a new browser context from the allocator.
+	browserCtx, browserCancel := chromedp.NewContext(allocCtx)
+	defer browserCancel()
 
-	// Navigate and capture the full page with stealth measures.
+	// Random delay before starting to mimic a human.
+	time.Sleep(time.Duration(500+rand.Intn(1500)) * time.Millisecond)
+
 	var buf []byte
-	err := chromedp.Run(ctx,
-		// Set realistic viewport.
-		chromedp.EmulateViewport(1920, 1080),
-		// Set user agent to a common browser.
+	err := chromedp.Run(browserCtx,
+		// Set a realistic user agent via CDP.
 		chromedp.ActionFunc(func(ctx context.Context) error {
-			return chromedp.EmulateUserAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36").Do(ctx)
+			return emulation.SetUserAgentOverride(
+				"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+			).Do(ctx)
 		}),
-		// Add random delay to mimic human behavior.
+		// Navigate to the URL.
+		chromedp.Navigate(targetURL),
+		// Wait for the body to be ready.
+		chromedp.WaitReady("body"),
+		// Brief pause for JS-rendered content.
 		chromedp.ActionFunc(func(ctx context.Context) error {
 			time.Sleep(time.Duration(1000+rand.Intn(2000)) * time.Millisecond)
 			return nil
 		}),
-		// Navigate to the target URL.
-		chromedp.Navigate(targetURL),
-		// Wait for the page to load.
-		chromedp.WaitReady("body"),
-		// Add delay after page load.
-		chromedp.ActionFunc(func(ctx context.Context) error {
-			time.Sleep(time.Duration(500+rand.Intn(1000)) * time.Millisecond)
-			return nil
-		}),
-		// Capture full page screenshot.
+		// Capture full-page screenshot.
 		chromedp.FullScreenshot(&buf, 100),
 	)
 	if err != nil {
