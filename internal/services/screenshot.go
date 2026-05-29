@@ -28,6 +28,7 @@ func (s *ScreenshotService) TakeScreenshot(ctx context.Context, targetURL string
 
 	// Create a headless browser allocator with stealth flags.
 	allocCtx, allocCancel := chromedp.NewExecAllocator(ctx,
+		chromedp.ExecPath("C:/Program Files/Google/Chrome/Application/chrome.exe"),
 		chromedp.Flag("headless", true),
 		chromedp.Flag("disable-blink-features", "AutomationControlled"),
 		chromedp.Flag("disable-features", "IsolateOrigins,site-per-process"),
