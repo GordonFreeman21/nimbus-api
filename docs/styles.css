@@ -616,3 +616,15 @@ body { font-family: var(--sans); background: var(--bg-base); color: var(--text);
     }
     .lightning-flash, .lightning-bolt { display: none !important; }
 }
+
+/* ─── Camera Shake ─── */
+@keyframes cameraShake {
+    0% { transform: translate(0,0); }
+    10% { transform: translate(-2px,1px); }
+    20% { transform: translate(3px,-1px); }
+    30% { transform: translate(-1px,2px); }
+    40% { transform: translate(2px,-2px); }
+    50% { transform: translate(-1px,1px); }
+    60% { transform: translate(1px,-1px); }
+    100% { transform: translate(0,0); }
+}
