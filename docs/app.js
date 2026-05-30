@@ -21,14 +21,17 @@ function fastFetch(url) {
 
 // ─── Preloader & Entrance ───────────────────
 function hidePreloader() {
-    if (document.getElementById("preloader").classList.contains("fade-out")) return;
-    document.getElementById("preloader").classList.add("fade-out");
-    triggerEntrance();
+    try {
+        const el = document.getElementById("preloader");
+        if (!el || el.classList.contains("fade-out")) return;
+        el.classList.add("fade-out");
+        triggerEntrance();
+    } catch(e) { console.error(e); }
 }
 
-// Use DOMContentLoaded (fires fast) + fallback timeout
-document.addEventListener("DOMContentLoaded", () => setTimeout(hidePreloader, 300));
-// Safety: never stay stuck longer than 2s
+// Run immediately — script is at bottom of body, DOM is ready
+setTimeout(hidePreloader, 300);
+// Absolute safety: force-hide after 2s no matter what
 setTimeout(hidePreloader, 2000);
 
 function triggerEntrance() {
@@ -77,11 +80,12 @@ function triggerEntrance() {
 
 // ─── Hero Canvas: Stars, Rain, Aurora, Shooting Stars ──
 const starCanvas = document.getElementById("particles-canvas");
-const starCtx = starCanvas.getContext("2d");
+const starCtx = starCanvas ? starCanvas.getContext("2d") : null;
 let stars = [];
 const mouse = { x: null, y: null, radius: 160 };
 
 function resizeStarCanvas() {
+    if (!starCanvas) return;
     starCanvas.width = window.innerWidth;
     starCanvas.height = window.innerHeight;
     buildStars();
@@ -89,6 +93,7 @@ function resizeStarCanvas() {
 
 function buildStars() {
     stars = [];
+    if (!starCanvas) return;
     const count = Math.min(Math.floor(starCanvas.width / 10), 160);
     for (let i = 0; i < count; i++) {
         stars.push({
@@ -185,6 +190,7 @@ function drawShootingStars(ctx) {
 }
 
 function animateHeroCanvas() {
+    if (!starCtx || !starCanvas) return;
     const t = Date.now() * 0.001;
     starCtx.clearRect(0, 0, starCanvas.width, starCanvas.height);
 
@@ -288,6 +294,7 @@ function animateHeroCanvas() {
 
 window.addEventListener("resize", resizeStarCanvas);
 window.addEventListener("mousemove", (e) => {
+    if (!starCanvas) return;
     const r = starCanvas.getBoundingClientRect();
     mouse.x = e.clientX - r.left;
     mouse.y = e.clientY - r.top;
@@ -840,5 +847,5 @@ function startManifestoConsole() {
 }
 
 // ─── Init ───────────────────────────────────
-pingServer();
-startManifestoConsole();
+try { pingServer(); } catch(e) { console.error("pingServer error:", e); }
+try { startManifestoConsole(); } catch(e) { console.error("console error:", e); }

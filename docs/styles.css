@@ -27,8 +27,9 @@ html { scroll-behavior: smooth; scrollbar-width: thin; scrollbar-color: rgba(255
 body { font-family: var(--sans); background: var(--bg-base); color: var(--text); overflow-x: hidden; line-height: 1.6; -webkit-font-smoothing: antialiased; }
 
 /* ─── Preloader ─── */
-.preloader { position:fixed; inset:0; background:#02040a; z-index:9999; display:flex; align-items:center; justify-content:center; transition: opacity 1s ease, visibility 1s; }
-.preloader.fade-out { opacity:0; visibility:hidden; pointer-events:none; }
+.preloader { position:fixed; inset:0; background:#02040a; z-index:9999; display:flex; align-items:center; justify-content:center; transition: opacity 1s ease, visibility 1s; animation: preloaderFallback 3s forwards; }
+.preloader.fade-out { opacity:0; visibility:hidden; pointer-events:none; animation:none; }
+@keyframes preloaderFallback { 0%,80%{opacity:1;visibility:visible} 100%{opacity:0;visibility:hidden;pointer-events:none} }
 .preloader-ring { width:48px; height:48px; border:2px solid rgba(59,130,246,0.12); border-top-color:var(--primary); border-radius:50%; animation:spin 1s linear infinite; }
 
 /* ─── Ambient Background ─── */
