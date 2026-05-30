@@ -20,12 +20,16 @@ function fastFetch(url) {
 }
 
 // ─── Preloader & Entrance ───────────────────
-window.addEventListener("load", () => {
-    setTimeout(() => {
-        document.getElementById("preloader").classList.add("fade-out");
-        triggerEntrance();
-    }, 400);
-});
+function hidePreloader() {
+    if (document.getElementById("preloader").classList.contains("fade-out")) return;
+    document.getElementById("preloader").classList.add("fade-out");
+    triggerEntrance();
+}
+
+// Use DOMContentLoaded (fires fast) + fallback timeout
+document.addEventListener("DOMContentLoaded", () => setTimeout(hidePreloader, 300));
+// Safety: never stay stuck longer than 2s
+setTimeout(hidePreloader, 2000);
 
 function triggerEntrance() {
     const cL = document.getElementById("cloudLeft");
