@@ -28,7 +28,7 @@ function triggerEntrance() {
     // Start rain particles
     isRaining = true;
     
-    // 2. Trigger electrical storm flash (Blitz) after 600ms
+    // 2. Trigger electrical storm flash (Blitz) after 800ms
     setTimeout(() => {
         const flash = document.getElementById("lightningFlash");
         const bolt = document.getElementById("lightningBolt");
@@ -36,7 +36,7 @@ function triggerEntrance() {
         if (flash) flash.classList.add("flash");
         if (bolt) bolt.classList.add("active");
         
-        // 3. Just as the lightning strikes (350ms later), majestically part the clouds and reveal the sun
+        // 3. Part clouds and reveal the sun after the flash fades
         setTimeout(() => {
             document.getElementById("nav").classList.add("revealed");
             cL.classList.add("revealed");
@@ -53,9 +53,9 @@ function triggerEntrance() {
                 if (scrollHint) scrollHint.classList.add("visible");
                 
                 entranceComplete = true; // Unlock scroll parallax
-            }, 600);
-        }, 350);
-    }, 600);
+            }, 800);
+        }, 500);
+    }, 800);
 }
 
 // ─── Sun Rays ───────────────────────────────
@@ -458,8 +458,8 @@ class WeatherScene {
         });
 
         // Lightning flash
-        if (this.condition === "storm" && Math.random() < .004) {
-            c.fillStyle = "rgba(255,255,255,.12)";
+        if (this.condition === "storm" && Math.random() < .003) {
+            c.fillStyle = "rgba(255,255,255,.06)";
             c.fillRect(0, 0, w, h);
         }
 
