@@ -34,10 +34,6 @@ func main() {
 	screenshotSvc := services.NewScreenshotService()
 	screenshotHandler := handlers.NewScreenshotHandler(screenshotSvc)
 
-	// Email Endpoint
-	emailSvc := services.NewEmailService(cfg.EmailAPIURL)
-	emailHandler := handlers.NewEmailHandler(emailSvc)
-
 	// Weather Endpoint
 	mux.HandleFunc("GET /api/v1/weather", weatherHandler.GetCurrentWeather)
 
@@ -48,7 +44,7 @@ func main() {
 	mux.HandleFunc("GET /api/v1/screenshot", screenshotHandler.CaptureScreenshot)
 
 	// Email Endpoint
-	mux.HandleFunc("GET /api/v1/email", emailHandler.SendEmail)
+	mux.HandleFunc("GET /api/v1/email", handlers.SendEmail)
 
 	// Health Check
 	mux.HandleFunc("GET /health", func(w http.ResponseWriter, r *http.Request) {

@@ -1,43 +1,27 @@
 package handlers
 
 import (
-	"encoding/json"
+	"io"
 	"net/http"
-
-	"github.com/gordonfreeman21/nimbus-api/internal/models"
-	"github.com/gordonfreeman21/nimbus-api/internal/services"
 )
 
-type EmailHandler struct {
-	service *services.EmailService
-}
+const emailAPI = "https://nimbus-api-gxuc.onrender.com/api/v1/email"
 
-func NewEmailHandler(svc *services.EmailService) *EmailHandler {
-	return &EmailHandler{service: svc}
-}
-
-func (h *EmailHandler) SendEmail(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
-
-	to := r.URL.Query().Get("to")
-	subject := r.URL.Query().Get("subject")
-	body := r.URL.Query().Get("body")
-
-	if to == "" {
-		w.WriteHeader(http.StatusBadRequest)
-		json.NewEncoder(w).Encode(models.ErrorResponse{
-			Error: "missing 'to' query parameter (e.g. ?to=user@example.com)",
-		})
+func SendEmail(w http.ResponseWriter, r *http.Request) {
+	q := r.URL.Query()
+	if q.Get("to") == "" {
+		http.Error(w, `{"error":"missing 'to' query parameter"}`, http.StatusBadRequest)
 		return
 	}
 
-	resp, err := h.service.SendEmail(r.Context(), to, subject, body)
+	target := emailAPI + "?" + q.Encode()
+	resp, err := http.Get(target)
 	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		json.NewEncoder(w).Encode(models.ErrorResponse{Error: "failed to send email"})
+		http.Error(w, `{"error":"failed to send email"}`, http.StatusInternalServerError)
 		return
 	}
+	defer resp.Body.Close()
 
-	w.WriteHeader(http.StatusOK)
-	json.NewEncoder(w).Encode(resp)
+	w.WriteHeader(resp.StatusCode)
+	io.Copy(w, resp.Body)
 }
