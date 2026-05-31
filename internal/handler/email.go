@@ -3,7 +3,6 @@ package handlers
 import (
 	"context"
 	"encoding/json"
-	"log"
 	"net/http"
 	"os"
 	"time"
@@ -48,9 +47,8 @@ func SendEmail(w http.ResponseWriter, r *http.Request) {
 
 	_, err := client.Emails.SendWithContext(ctx, params)
 	if err != nil {
-		log.Printf("Resend error: %v", err)
 		w.WriteHeader(http.StatusInternalServerError)
-		json.NewEncoder(w).Encode(models.ErrorResponse{Error: "failed to send email"})
+		json.NewEncoder(w).Encode(models.ErrorResponse{Error: err.Error()})
 		return
 	}
 
