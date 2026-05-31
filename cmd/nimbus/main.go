@@ -34,6 +34,10 @@ func main() {
 	screenshotSvc := services.NewScreenshotService()
 	screenshotHandler := handlers.NewScreenshotHandler(screenshotSvc)
 
+	// Image Search Endpoint
+	imageSvc := services.NewImageService(cfg.UnsplashAccessKey)
+	imageHandler := handlers.NewImageHandler(imageSvc)
+
 	// Weather Endpoint
 	mux.HandleFunc("GET /api/v1/weather", weatherHandler.GetCurrentWeather)
 
@@ -42,6 +46,9 @@ func main() {
 
 	// Screenshot Endpoint
 	mux.HandleFunc("GET /api/v1/screenshot", screenshotHandler.CaptureScreenshot)
+
+	// Image Search Endpoint
+	mux.HandleFunc("GET /api/v1/images", imageHandler.GetImages)
 
 	// Email Endpoint
 	mux.HandleFunc("GET /api/v1/email", handlers.SendEmail)
@@ -71,6 +78,7 @@ func main() {
 	log.Printf("🌤️  Weather endpoint:     GET /api/v1/weather?city=Berlin")
 	log.Printf("🧬 Species endpoint:     GET /api/v1/bio/species?name=Blue+Whale")
 	log.Printf("📸 Screenshot endpoint:  GET /api/v1/screenshot?url=https://example.com")
+	log.Printf("🖼️  Image search:         GET /api/v1/images?q=coffee")
 	log.Printf("📧 Email endpoint:       GET /api/v1/email?to=user@example.com&subject=Hi&body=Hello")
 	log.Printf("✅ Health check:         GET /health")
 

@@ -328,16 +328,16 @@ input, textarea { font: inherit; color: inherit; }
 }
 .hero-scape {
   position: absolute; inset: auto 0 0 0;
-  height: 60%;
+  height: 55%;
   z-index: 0;
   pointer-events: none;
   opacity: .85;
 }
 .hero-scape svg { position: absolute; left: 0; right: 0; width: 100%; }
-.hero-scape .h-trees-far { bottom: 32%; height: 22%; opacity: .55; }
-.hero-scape .h-trees-mid { bottom: 18%; height: 30%; opacity: .8; }
-.hero-scape .h-field    { bottom: 0;   height: 44%; }
-.hero-scape .h-grass    { bottom: 0;   height: 12%; opacity: .9; }
+.hero-scape .h-trees-far { bottom: 40%; height: 24%; opacity: .55; }
+.hero-scape .h-trees-mid { bottom: 24%; height: 32%; opacity: .8; }
+.hero-scape .h-field    { bottom: 0;   height: 52%; }
+.hero-scape .h-grass    { bottom: 0;   height: 14%; opacity: .9; }
 
 .hero-rays {
   position: absolute; inset: 0; z-index: 0;
@@ -406,30 +406,6 @@ input, textarea { font: inherit; color: inherit; }
 .hero-meta .item .k { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--graphite-500); letter-spacing: 0.12em; text-transform: uppercase; }
 .hero-meta .item .v { font-family: 'Fraunces', serif; font-size: 22px; color: var(--graphite-900); margin-top: 4px; }
 
-.scroll-prompt {
-  position: absolute; bottom: 28px; left: 50%; transform: translateX(-50%);
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase;
-  color: var(--graphite-500);
-  display: flex; flex-direction: column; align-items: center; gap: 8px;
-}
-.scroll-prompt .bar {
-  width: 1px; height: 38px;
-  background: linear-gradient(to bottom, var(--graphite-500), transparent);
-  position: relative;
-  overflow: hidden;
-}
-.scroll-prompt .bar::after {
-  content: ""; position: absolute; top: -10px; left: 0; width: 1px; height: 10px;
-  background: var(--forest-500);
-  animation: scrollFlow 2.2s var(--ease-natural) infinite;
-}
-@keyframes scrollFlow {
-  0%   { transform: translateY(0); opacity: 0; }
-  20%  { opacity: 1; }
-  100% { transform: translateY(48px); opacity: 0; }
-}
-
 /* =========================================================================
    SECTIONS — Shared
    ========================================================================= */
@@ -468,10 +444,11 @@ section { position: relative; z-index: 2; }
 
 .sandboxes {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 22px;
 }
-@media (max-width: 1020px) { .sandboxes { grid-template-columns: 1fr; } }
+@media (max-width: 1020px) { .sandboxes { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 580px) { .sandboxes { grid-template-columns: 1fr; } }
 
 .card {
   position: relative;
@@ -1269,7 +1246,7 @@ footer .bottom { margin-top: 60px; padding-top: 24px; border-top: 1px solid rgba
     </svg>
     <svg class="h-field" viewBox="0 0 1440 400" preserveAspectRatio="none">
       <defs><linearGradient id="hf" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#C39A6F"/><stop offset="1" stop-color="#8D6A47"/></linearGradient></defs>
-      <path d="M0,400 L0,90 C220,40 460,130 720,90 C980,50 1240,130 1440,100 L1440,400 Z" fill="url(#hf)"/>
+      <path d="M0,400 L0,0 C220,-40 460,100 720,0 C980,-50 1240,100 1440,0 L1440,400 Z" fill="url(#hf)"/>
     </svg>
     <svg class="h-grass" viewBox="0 0 1440 80" preserveAspectRatio="none">
       <g stroke="#3A2C1D" stroke-width="1.1" stroke-linecap="round" opacity=".5">
@@ -1305,14 +1282,9 @@ footer .bottom { margin-top: 60px; padding-top: 24px; border-top: 1px solid rgba
     <div class="hero-meta">
       <div class="item"><div class="k">Uptime</div><div class="v">99.97%</div></div>
       <div class="item"><div class="k">Median latency</div><div class="v">38 ms</div></div>
-      <div class="item"><div class="k">Endpoints</div><div class="v">3 public</div></div>
+      <div class="item"><div class="k">Endpoints</div><div class="v">4 public</div></div>
       <div class="item"><div class="k">License</div><div class="v">MIT</div></div>
     </div>
-  </div>
-
-  <div class="scroll-prompt">
-    <span>Scroll</span>
-    <span class="bar"></span>
   </div>
 </section>
 
@@ -1324,7 +1296,7 @@ footer .bottom { margin-top: 60px; padding-top: 24px; border-top: 1px solid rgba
   <div class="container">
     <div class="section-head reveal">
       <span class="eyebrow"><span class="dot"></span> Try it</span>
-      <h2>Three commands. <em>One terminal.</em></h2>
+      <h2>Four commands. <em>One terminal.</em></h2>
       <p>No key, no setup, no account. Copy a command, paste it into your shell — JSON or a PNG comes back.</p>
     </div>
 
@@ -1397,6 +1369,40 @@ footer .bottom { margin-top: 60px; padding-top: 24px; border-top: 1px solid rgba
             <span class="k">url</span>
             <span class="r req">Required</span>
             <span class="d">Fully-qualified URL — must include https://.</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- Images -->
+      <article class="card reveal">
+        <div class="card-head">
+          <span class="card-tag">Images</span>
+          <span class="card-status">Live</span>
+        </div>
+        <h3>Search the world's images.</h3>
+        <p class="card-desc">Find high-quality photos by keyword — mountains, coffee, architecture. Paginated, fast.</p>
+
+        <div class="play-code">
+          <button class="play-copy" type="button" data-clip='curl "https://nimbus-api-gxuc.onrender.com/api/v1/images?q=mountains"'>Copy</button>
+          <pre><span class="tk-cmd">curl</span> <span class="tk-str">"https://nimbus-api-gxuc.onrender.com/api/v1/images?q=mountains"</span></pre>
+        </div>
+
+        <div class="ep-params">
+          <span class="play-section-label">Parameters</span>
+          <div class="row">
+            <span class="k">q</span>
+            <span class="r req">Required</span>
+            <span class="d">Search keyword — mountains, cats, coffee.</span>
+          </div>
+          <div class="row">
+            <span class="k">page</span>
+            <span class="r">Optional</span>
+            <span class="d">Page number. Default 1.</span>
+          </div>
+          <div class="row">
+            <span class="k">per_page</span>
+            <span class="r">Optional</span>
+            <span class="d">Results per page. Default 10, max 30.</span>
           </div>
         </div>
       </article>
@@ -1666,6 +1672,7 @@ footer .bottom { margin-top: 60px; padding-top: 24px; border-top: 1px solid rgba
         <a href="https://nimbus-api-gxuc.onrender.com/api/v1/weather?city=Berlin" target="_blank" rel="noopener">Weather</a>
         <a href="https://nimbus-api-gxuc.onrender.com/api/v1/bio/species?name=Lion" target="_blank" rel="noopener">Species</a>
         <a href="https://nimbus-api-gxuc.onrender.com/api/v1/screenshot?url=https://github.com" target="_blank" rel="noopener">Screenshot</a>
+        <a href="https://nimbus-api-gxuc.onrender.com/api/v1/images?q=coffee" target="_blank" rel="noopener">Images</a>
       </div>
       <div>
         <h5>Studio</h5>

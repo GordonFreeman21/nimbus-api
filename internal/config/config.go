@@ -8,9 +8,10 @@ import (
 )
 
 type Config struct {
-	Port            string
-	GeocodingAPIURL string
-	WeatherAPIURL   string
+	Port              string
+	GeocodingAPIURL   string
+	WeatherAPIURL     string
+	UnsplashAccessKey string
 }
 
 func Load() *Config {
@@ -25,8 +26,9 @@ func Load() *Config {
 	}
 
 	return &Config{
-		Port:            port,
-		GeocodingAPIURL: "https://geocoding-api.open-meteo.com/v1/search",
-		WeatherAPIURL:   "https://api.open-meteo.com/v1/forecast",
+		Port:              port,
+		GeocodingAPIURL:   "https://geocoding-api.open-meteo.com/v1/search",
+		WeatherAPIURL:     "https://api.open-meteo.com/v1/forecast",
+		UnsplashAccessKey: os.Getenv("UNSPLASH_ACCESS_KEY"),
 	}
 }
