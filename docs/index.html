@@ -531,6 +531,42 @@ section { position: relative; z-index: 2; }
   overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
 }
 .card .endpoint b { color: var(--forest-700); font-weight: 600; }
+.card .card-desc {
+  font-size: 14.5px;
+  line-height: 1.55;
+  color: var(--graphite-600);
+  margin: 4px 0 18px;
+}
+
+/* Endpoint parameter rows inside Try-it cards */
+.ep-params { margin-top: 16px; }
+.ep-params .play-section-label { display: block; margin-bottom: 8px; }
+.ep-params .row {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  padding-top: 8px;
+  border-top: 1px solid var(--rule);
+  font-size: 13px;
+  line-height: 1.55;
+}
+.ep-params .k {
+  font-family: 'JetBrains Mono', monospace;
+  color: var(--forest-700);
+  font-weight: 500;
+  font-size: 12.5px;
+  flex: 0 0 70px;
+}
+.ep-params .r {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--graphite-500);
+  flex: 0 0 80px;
+}
+.ep-params .r.req { color: var(--forest-700); }
+.ep-params .d { color: var(--graphite-700); flex: 1; min-width: 0; }
 
 .input-row { display: flex; gap: 8px; align-items: stretch; margin-bottom: 14px; }
 .input {
@@ -560,144 +596,6 @@ section { position: relative; z-index: 2; }
 .btn:hover { transform: translateY(-1px); background: #111; }
 .btn:active { transform: translateY(0) scale(.97); }
 .btn[disabled] { opacity: .55; cursor: progress; }
-
-/* Micro-world canvases */
-.world {
-  position: relative;
-  border-radius: 14px;
-  overflow: hidden;
-  border: 1px solid var(--rule);
-  background: var(--cream-100);
-  flex: 1;
-  min-height: 240px;
-  isolation: isolate;
-}
-
-/* WEATHER WORLD */
-.w-sky {
-  position: absolute; inset: 0;
-  background: linear-gradient(180deg, #B6D2DD 0%, #E9D8B8 100%);
-  transition: background 1s var(--ease-natural);
-}
-.w-sun {
-  position: absolute;
-  top: 18%; left: 70%;
-  width: 64px; height: 64px;
-  border-radius: 50%;
-  background: radial-gradient(circle, #FFE6AE 0%, #F2B86C 70%, transparent 78%);
-  filter: blur(.5px);
-  opacity: .9;
-  transition: transform 1.2s var(--ease-natural), opacity .8s, filter .8s;
-  box-shadow: 0 0 60px 12px rgba(255,201,124,.45);
-}
-.w-clouds, .w-precip {
-  position: absolute; inset: 0; overflow: hidden;
-}
-.w-cloud {
-  position: absolute;
-  background: rgba(255,255,255,.85);
-  border-radius: 999px;
-  filter: blur(.3px);
-  box-shadow: 0 4px 12px rgba(0,0,0,.06);
-}
-.w-hills {
-  position: absolute; left: 0; right: 0; bottom: 0; height: 50%;
-}
-.w-hills svg { width: 100%; height: 100%; }
-.w-drop {
-  position: absolute;
-  width: 1.5px; height: 14px;
-  background: linear-gradient(to bottom, transparent, rgba(120,160,200,.75));
-  border-radius: 1px;
-}
-.w-flake {
-  position: absolute;
-  width: 5px; height: 5px;
-  background: #fff; border-radius: 50%;
-  opacity: .9;
-  filter: blur(.4px);
-}
-.w-readout {
-  position: absolute; left: 14px; bottom: 14px; right: 14px;
-  display: grid; grid-template-columns: auto 1fr auto; gap: 14px; align-items: end;
-  font-family: 'JetBrains Mono', monospace;
-  color: var(--graphite-900);
-}
-.w-readout .temp { font-family: 'Fraunces', serif; font-size: 44px; line-height: 1; letter-spacing: -.02em; }
-.w-readout .city { font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--graphite-600); }
-.w-readout .cond { font-size: 12px; color: var(--graphite-700); }
-.w-readout .meta { font-size: 11px; color: var(--graphite-500); text-align: right; line-height: 1.7; }
-
-/* SPECIES WORLD — taxonomy tree */
-.s-world {
-  background:
-    radial-gradient(110% 70% at 50% 100%, rgba(46,79,58,.14), transparent 70%),
-    linear-gradient(180deg, #F6EFE0 0%, #EFE6D0 100%);
-}
-.s-tree {
-  position: absolute; inset: 0;
-}
-.s-tree svg { width: 100%; height: 100%; display: block; }
-.s-tree .branch { fill: none; stroke: #3a5a44; stroke-width: 1.6; stroke-linecap: round; }
-.s-tree .leaf { transition: transform .35s var(--ease-rise), opacity .35s; transform-origin: center; }
-.s-tree .leaf:hover { transform: scale(1.18); }
-.s-readout {
-  position: absolute; left: 14px; bottom: 14px; right: 14px;
-  font-family: 'JetBrains Mono', monospace; font-size: 11px;
-  color: var(--graphite-700);
-  display: grid; grid-template-columns: 1fr 1fr; gap: 4px 14px;
-}
-.s-readout b { color: var(--graphite-900); font-weight: 600; }
-.s-name {
-  position: absolute; top: 14px; left: 14px; right: 14px;
-  font-family: 'Fraunces', serif;
-  font-size: 20px; font-style: italic;
-  color: var(--graphite-900);
-  letter-spacing: -.005em;
-}
-
-/* SCREENSHOT WORLD — polaroid */
-.cap-world {
-  background: #15110D;
-}
-.cap-aperture {
-  position: absolute; inset: 0;
-  display: grid; place-items: center;
-  pointer-events: none;
-}
-.cap-aperture svg { width: 70%; max-width: 220px; height: auto; }
-.cap-frame {
-  position: absolute; left: 50%; top: 50%; transform: translate(-50%,-50%);
-  width: 86%; aspect-ratio: 16/10;
-  background: var(--cream-50);
-  border-radius: 6px;
-  box-shadow: 0 18px 48px -16px rgba(0,0,0,.55), 0 2px 4px rgba(0,0,0,.25);
-  overflow: hidden;
-  opacity: 0;
-}
-.cap-frame img {
-  width: 100%; height: 100%; object-fit: cover; display: block;
-  filter: saturate(0) brightness(1.05);
-  opacity: 0;
-  transition: filter 1.6s var(--ease-natural), opacity 1.6s var(--ease-natural);
-}
-.cap-frame img.developed { filter: saturate(1) brightness(1); opacity: 1; }
-.cap-label {
-  position: absolute; left: 14px; bottom: 14px;
-  font-family: 'JetBrains Mono', monospace; font-size: 10px;
-  letter-spacing: 0.14em; text-transform: uppercase;
-  color: rgba(248,244,237,.55);
-}
-
-/* Celebratory particles */
-.celebrate {
-  position: absolute; inset: 0; pointer-events: none; z-index: 5;
-}
-.celebrate i {
-  position: absolute; width: 4px; height: 4px; border-radius: 50%;
-  background: radial-gradient(circle, #FFE3B0, rgba(255,201,124,0) 75%);
-  opacity: 0;
-}
 
 /* =========================================================================
    GO ENGINE SECTION
@@ -900,6 +798,10 @@ section { position: relative; z-index: 2; }
   grid-template-columns: 1fr 1fr;
   gap: 22px;
 }
+.tester-grid.single {
+  grid-template-columns: minmax(0, 720px);
+  justify-content: center;
+}
 @media (max-width: 980px) { .tester-grid { grid-template-columns: 1fr; } }
 
 .tester-card {
@@ -916,36 +818,7 @@ section { position: relative; z-index: 2; }
 .tester-card h3 { font-family: 'Fraunces', serif; font-weight: 400; font-size: 32px; margin: 12px 0 6px; letter-spacing: -.015em; }
 .tester-card p { color: var(--graphite-600); margin: 0 0 22px; }
 
-/* playground (curl copy card) */
-.play-tabs {
-  display: flex;
-  gap: 4px;
-  background: rgba(28,28,28,.045);
-  border: 1px solid var(--rule);
-  border-radius: 10px;
-  padding: 4px;
-  margin: 22px 0 14px;
-}
-.play-tab {
-  flex: 1;
-  padding: 9px 8px;
-  border-radius: 7px;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 10.5px;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--graphite-600);
-  transition: background .22s var(--ease-natural), color .22s var(--ease-natural);
-  text-align: center;
-  white-space: nowrap;
-}
-.play-tab:hover { color: var(--graphite-900); }
-.play-tab[aria-selected="true"] {
-  background: var(--graphite-900);
-  color: var(--cream-50);
-  box-shadow: 0 4px 12px -6px rgba(0,0,0,.35);
-}
-
+/* Curl copy block */
 .play-code {
   position: relative;
   background: linear-gradient(180deg, #1F1B17 0%, #181410 100%);
@@ -1073,16 +946,65 @@ section { position: relative; z-index: 2; }
   width: 1px;
   background: rgba(216,82,82,.28);
 }
-.propose-form { display: grid; gap: 12px; }
-.propose-form label { font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--graphite-500); }
+.propose-form { display: grid; gap: 14px; position: relative; z-index: 2; }
+.propose-form label {
+  display: block;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--graphite-500);
+  margin-bottom: 8px;
+}
+
+/* Chatbox — a proper, comfortable typing surface */
+.chatbox {
+  position: relative;
+  background: rgba(255, 252, 244, .92);
+  border: 1px solid rgba(180,140,90,.28);
+  border-radius: 14px;
+  padding: 14px 16px 38px;
+  box-shadow: inset 0 1px 2px rgba(60,40,20,.05), 0 1px 0 rgba(255,255,255,.6);
+  transition: border-color .25s var(--ease-natural), box-shadow .3s var(--ease-natural), background .25s var(--ease-natural);
+}
+.chatbox:focus-within {
+  border-color: var(--forest-500);
+  background: var(--cream-50);
+  box-shadow: 0 0 0 4px rgba(74,112,67,.14), inset 0 1px 2px rgba(60,40,20,.04);
+}
 .propose-form textarea {
-  background: transparent; border: 0; outline: none;
-  font-family: 'Fraunces', serif; font-size: 18px; line-height: 28px;
+  display: block;
+  width: 100%;
+  background: transparent;
+  border: 0;
+  outline: none;
+  font-family: 'Fraunces', serif;
+  font-weight: 400;
+  font-size: 17px;
+  line-height: 1.65;
   color: var(--graphite-900);
   resize: vertical;
-  min-height: 96px;
-  padding: 0 0 0 12px;
+  min-height: 140px;
+  padding: 0;
 }
+.propose-form textarea::placeholder {
+  color: rgba(28,28,28,.42);
+  font-style: italic;
+}
+.chatbox-foot {
+  position: absolute;
+  left: 16px; right: 16px; bottom: 10px;
+  display: flex; align-items: center; justify-content: space-between;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--graphite-500);
+  pointer-events: none;
+}
+.chatbox-foot .count b { color: var(--graphite-900); font-weight: 600; }
+.chatbox-foot .hint { opacity: .7; }
+
 .propose-form .row { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
 
 .plane {
@@ -1318,7 +1240,7 @@ footer .bottom { margin-top: 60px; padding-top: 24px; border-top: 1px solid rgba
       <span class="brand-name">Nimbus<em>.</em></span>
     </a>
     <nav class="nav-links">
-      <a href="#sandboxes">Live APIs</a>
+      <a href="#try">Try it</a>
       <a href="#engine">Engine</a>
       <a href="#manifesto">Manifesto</a>
       <a href="#about">About</a>
@@ -1373,7 +1295,7 @@ footer .bottom { margin-top: 60px; padding-top: 24px; border-top: 1px solid rgba
       Nimbus is an independent studio in northern Germany building ultra-fast, permanently public APIs as a long-term public good. No keys. No tracking. No paywalls. Just a single Go binary, running quietly, doing its job.
     </p>
     <div class="hero-actions">
-      <a class="cta" href="#sandboxes">
+      <a class="cta" href="#try">
         Try the APIs
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
       </a>
@@ -1383,7 +1305,7 @@ footer .bottom { margin-top: 60px; padding-top: 24px; border-top: 1px solid rgba
     <div class="hero-meta">
       <div class="item"><div class="k">Uptime</div><div class="v">99.97%</div></div>
       <div class="item"><div class="k">Median latency</div><div class="v">38 ms</div></div>
-      <div class="item"><div class="k">Endpoints</div><div class="v">4 public</div></div>
+      <div class="item"><div class="k">Endpoints</div><div class="v">3 public</div></div>
       <div class="item"><div class="k">License</div><div class="v">MIT</div></div>
     </div>
   </div>
@@ -1395,130 +1317,87 @@ footer .bottom { margin-top: 60px; padding-top: 24px; border-top: 1px solid rgba
 </section>
 
 <!-- =========================================================================
-     SANDBOXES
+     TRY IT — copy-paste curl scripts
      ========================================================================= -->
-<section class="section" id="sandboxes">
+<section class="section" id="try">
   <div class="sandbox-bg"></div>
   <div class="container">
     <div class="section-head reveal">
-      <span class="eyebrow"><span class="dot"></span> Live Sandboxes</span>
-      <h2>Three small instruments. <em>Real responses.</em></h2>
-      <p>Every interaction below talks to the live Nimbus backend. Touch the inputs — the worlds respond to your data.</p>
+      <span class="eyebrow"><span class="dot"></span> Try it</span>
+      <h2>Three commands. <em>One terminal.</em></h2>
+      <p>No key, no setup, no account. Copy a command, paste it into your shell — JSON or a PNG comes back.</p>
     </div>
 
     <div class="sandboxes">
-      <!-- WEATHER -->
-      <article class="card reveal" data-card="weather">
+      <!-- Weather -->
+      <article class="card reveal">
         <div class="card-head">
           <span class="card-tag">Weather</span>
           <span class="card-status">Live</span>
         </div>
         <h3>Atmosphere, anywhere.</h3>
-        <div class="endpoint mono">GET <b>/api/v1/weather</b>?city=<span id="ep-w">Berlin</span></div>
+        <p class="card-desc">Current weather for any city — temperature, condition, humidity, wind, timestamp.</p>
 
-        <div class="input-row">
-          <input class="input" id="w-input" placeholder="City — e.g. Hamburg" value="Berlin" />
-          <button class="btn" id="w-btn">Fetch</button>
+        <div class="play-code">
+          <button class="play-copy" type="button" data-clip='curl "https://nimbus-api-gxuc.onrender.com/api/v1/weather?city=Berlin"'>Copy</button>
+          <pre><span class="tk-cmd">curl</span> <span class="tk-str">"https://nimbus-api-gxuc.onrender.com/api/v1/weather?city=Berlin"</span></pre>
         </div>
 
-        <div class="world" id="w-world">
-          <div class="w-sky"></div>
-          <div class="w-sun"></div>
-          <div class="w-clouds" id="w-clouds"></div>
-          <div class="w-precip" id="w-precip"></div>
-          <div class="w-hills">
-            <svg viewBox="0 0 600 200" preserveAspectRatio="none">
-              <path d="M0,200 L0,120 C100,100 180,140 280,110 C380,80 450,140 600,100 L600,200 Z" fill="#3F5A48" opacity=".55"/>
-              <path d="M0,200 L0,150 C120,120 220,160 340,140 C440,120 520,160 600,150 L600,200 Z" fill="#2E4F3A"/>
-            </svg>
+        <div class="ep-params">
+          <span class="play-section-label">Parameters</span>
+          <div class="row">
+            <span class="k">city</span>
+            <span class="r req">Required</span>
+            <span class="d">City name — Berlin, Hannover, Tokyo.</span>
           </div>
-          <div class="w-readout">
-            <div>
-              <div class="city" id="w-city">Berlin</div>
-              <div class="temp" id="w-temp">—°</div>
-              <div class="cond" id="w-cond">Awaiting wind</div>
-            </div>
-            <div></div>
-            <div class="meta">
-              <div>Humidity <b id="w-hum">—</b></div>
-              <div>Wind <b id="w-wind">—</b></div>
-            </div>
-          </div>
-          <div class="celebrate" id="w-celeb"></div>
         </div>
       </article>
 
-      <!-- SPECIES -->
-      <article class="card reveal" data-card="species">
+      <!-- Species -->
+      <article class="card reveal">
         <div class="card-head">
           <span class="card-tag">Bio · Species</span>
           <span class="card-status">Live</span>
         </div>
-        <h3>Taxonomy as a tree.</h3>
-        <div class="endpoint mono">GET <b>/api/v1/bio/species</b>?name=<span id="ep-s">Lion</span></div>
+        <h3>Taxonomy as JSON.</h3>
+        <p class="card-desc">Full taxonomy for any species — kingdom through genus, by Latin or common name.</p>
 
-        <div class="input-row">
-          <input class="input" id="s-input" placeholder="Species — Lion, Quercus robur…" value="Lion" />
-          <button class="btn" id="s-btn">Grow</button>
+        <div class="play-code">
+          <button class="play-copy" type="button" data-clip='curl "https://nimbus-api-gxuc.onrender.com/api/v1/bio/species?name=Quercus%20robur"'>Copy</button>
+          <pre><span class="tk-cmd">curl</span> <span class="tk-str">"https://nimbus-api-gxuc.onrender.com/api/v1/bio/species?name=Quercus%20robur"</span></pre>
         </div>
 
-        <div class="world s-world" id="s-world">
-          <div class="s-name" id="s-title"><em>Panthera leo</em></div>
-          <div class="s-tree" id="s-tree">
-            <!-- Drawn on response -->
+        <div class="ep-params">
+          <span class="play-section-label">Parameters</span>
+          <div class="row">
+            <span class="k">name</span>
+            <span class="r req">Required</span>
+            <span class="d">Common name (Lion) or scientific (Quercus robur).</span>
           </div>
-          <div class="s-readout">
-            <div>Kingdom <b id="s-king">—</b></div>
-            <div>Phylum <b id="s-phy">—</b></div>
-            <div>Class <b id="s-cls">—</b></div>
-            <div>Order <b id="s-ord">—</b></div>
-            <div>Family <b id="s-fam">—</b></div>
-            <div>Genus <b id="s-gen">—</b></div>
-          </div>
-          <div class="celebrate" id="s-celeb"></div>
         </div>
       </article>
 
-      <!-- SCREENSHOT -->
-      <article class="card reveal" data-card="capture">
+      <!-- Capture -->
+      <article class="card reveal">
         <div class="card-head">
           <span class="card-tag">Capture</span>
           <span class="card-status">Live</span>
         </div>
         <h3>The site, on paper.</h3>
-        <div class="endpoint mono">GET <b>/api/v1/screenshot</b>?url=<span id="ep-c">github.com</span></div>
+        <p class="card-desc">Screenshot any public URL as a PNG, written straight to disk.</p>
 
-        <div class="input-row">
-          <input class="input" id="c-input" placeholder="https://example.com" value="https://github.com" />
-          <button class="btn" id="c-btn">Capture</button>
+        <div class="play-code">
+          <button class="play-copy" type="button" data-clip='curl "https://nimbus-api-gxuc.onrender.com/api/v1/screenshot?url=https://github.com" -o page.png'>Copy</button>
+          <pre><span class="tk-cmd">curl</span> <span class="tk-str">"https://nimbus-api-gxuc.onrender.com/api/v1/screenshot?url=https://github.com"</span> <span class="tk-key">-o</span> <span class="tk-str">page.png</span></pre>
         </div>
 
-        <div class="world cap-world" id="c-world">
-          <div class="cap-aperture" id="c-aperture">
-            <svg viewBox="0 0 200 200">
-              <defs>
-                <radialGradient id="lens" cx=".5" cy=".5" r=".55">
-                  <stop offset="0" stop-color="#2A2018"/>
-                  <stop offset="1" stop-color="#0B0907"/>
-                </radialGradient>
-              </defs>
-              <circle cx="100" cy="100" r="92" fill="url(#lens)" stroke="#3D2A1A" stroke-width="2"/>
-              <g id="blades" fill="#181410" stroke="#3D2A1A" stroke-width="1">
-                <polygon points="100,100 100,8 180,40"/>
-                <polygon points="100,100 180,40 192,140"/>
-                <polygon points="100,100 192,140 130,196"/>
-                <polygon points="100,100 130,196 50,180"/>
-                <polygon points="100,100 50,180 8,90"/>
-                <polygon points="100,100 8,90 60,16"/>
-              </g>
-              <circle cx="100" cy="100" r="14" fill="#E8B774" opacity=".0" id="lensGlint"/>
-            </svg>
+        <div class="ep-params">
+          <span class="play-section-label">Parameters</span>
+          <div class="row">
+            <span class="k">url</span>
+            <span class="r req">Required</span>
+            <span class="d">Fully-qualified URL — must include https://.</span>
           </div>
-          <div class="cap-frame" id="c-frame">
-            <img id="c-img" alt="" />
-          </div>
-          <div class="cap-label">Nimbus · /screenshot · 1440×900</div>
-          <div class="celebrate" id="c-celeb"></div>
         </div>
       </article>
     </div>
@@ -1728,32 +1607,11 @@ footer .bottom { margin-top: 60px; padding-top: 24px; border-top: 1px solid rgba
 <section class="tester" id="propose">
   <div class="container">
     <div class="section-head reveal">
-      <span class="eyebrow"><span class="dot"></span> Tools & participation</span>
-      <h2>Bring your own desk. <em>Or propose a new endpoint.</em></h2>
+      <span class="eyebrow"><span class="dot"></span> Participation</span>
+      <h2>Propose <em>a new endpoint.</em></h2>
     </div>
 
-    <div class="tester-grid">
-      <!-- Playground (curl snippets) -->
-      <div class="tester-card reveal">
-        <span class="card-tag">Playground</span>
-        <h3>Try it from the terminal.</h3>
-        <p>Four endpoints, no key, no setup. Copy a command, paste it into your shell.</p>
-
-        <div class="play-tabs" role="tablist" aria-label="API examples">
-          <button class="play-tab" role="tab" type="button" aria-selected="true"  data-play="weather">Weather</button>
-          <button class="play-tab" role="tab" type="button" aria-selected="false" data-play="species">Species</button>
-          <button class="play-tab" role="tab" type="button" aria-selected="false" data-play="capture">Capture</button>
-          <button class="play-tab" role="tab" type="button" aria-selected="false" data-play="email">Email</button>
-        </div>
-
-        <div class="play-code">
-          <button class="play-copy" id="playCopy" type="button">Copy</button>
-          <pre id="playSnippet"></pre>
-        </div>
-
-        <div class="play-meta" id="playMeta"></div>
-      </div>
-
+    <div class="tester-grid single">
       <!-- Propose -->
       <div class="tester-card propose-card reveal">
         <span class="card-tag">Propose</span>
@@ -1769,8 +1627,14 @@ footer .bottom { margin-top: 60px; padding-top: 24px; border-top: 1px solid rgba
 
         <form class="propose-form" id="proposeForm" onsubmit="event.preventDefault(); flyPlane();">
           <div>
-            <label for="pa">Idea</label>
-            <textarea id="pa" name="idea" placeholder="A public sunrise/sunset API for anywhere on earth, with no key, returning ISO timestamps and golden-hour windows…"></textarea>
+            <label for="pa">Your idea</label>
+            <div class="chatbox">
+              <textarea id="pa" name="idea" maxlength="800" placeholder="A public sunrise/sunset API for anywhere on earth, with no key, returning ISO timestamps and golden-hour windows…"></textarea>
+              <div class="chatbox-foot">
+                <span class="hint">Plain language · markdown ok</span>
+                <span class="count"><b id="paCount">0</b> / 800</span>
+              </div>
+            </div>
           </div>
           <div class="row">
             <input class="input" id="pe" type="email" placeholder="you@studio.de" style="flex:1" />
@@ -1802,7 +1666,6 @@ footer .bottom { margin-top: 60px; padding-top: 24px; border-top: 1px solid rgba
         <a href="https://nimbus-api-gxuc.onrender.com/api/v1/weather?city=Berlin" target="_blank" rel="noopener">Weather</a>
         <a href="https://nimbus-api-gxuc.onrender.com/api/v1/bio/species?name=Lion" target="_blank" rel="noopener">Species</a>
         <a href="https://nimbus-api-gxuc.onrender.com/api/v1/screenshot?url=https://github.com" target="_blank" rel="noopener">Screenshot</a>
-        <a href="https://nimbus-api-gxuc.onrender.com/api/v1/email?to=you@example.com&amp;subject=Hi&amp;body=Hello" target="_blank" rel="noopener">Email</a>
       </div>
       <div>
         <h5>Studio</h5>
@@ -2116,339 +1979,38 @@ footer .bottom { margin-top: 60px; padding-top: 24px; border-top: 1px solid rgba
   }
 
   /* -------------------------------------------------------------------------
-     SANDBOX HELPERS
+     TOAST
      ------------------------------------------------------------------------- */
   function showToast(msg) {
     const t = document.getElementById('toast');
+    if (!t) return;
     t.textContent = msg;
     t.classList.add('show');
     setTimeout(() => t.classList.remove('show'), 2400);
   }
 
-  function celebrate(container) {
-    if (reduceMotion) return;
-    for (let i = 0; i < 16; i++) {
-      const p = document.createElement('i');
-      const x = 30 + Math.random() * 40;
-      const y = 30 + Math.random() * 40;
-      p.style.left = x + '%';
-      p.style.top  = y + '%';
-      const s = 3 + Math.random() * 5;
-      p.style.width = p.style.height = s + 'px';
-      container.appendChild(p);
-      gsap.fromTo(p, { opacity: 0, scale: .3 }, {
-        opacity: 1, scale: 1, duration: 0.4, ease: 'power2.out',
-        onComplete: () => {
-          gsap.to(p, {
-            x: (Math.random() - .5) * 220,
-            y: -(60 + Math.random() * 140),
-            opacity: 0,
-            duration: 1.6 + Math.random() * .6,
-            ease: 'power2.out',
-            onComplete: () => p.remove()
-          });
-        }
-      });
-    }
-  }
-
   /* -------------------------------------------------------------------------
-     WEATHER SANDBOX
+     COPY-TO-CLIPBOARD ([data-clip])
      ------------------------------------------------------------------------- */
-  const wInput = document.getElementById('w-input');
-  const wBtn   = document.getElementById('w-btn');
-  const wClouds = document.getElementById('w-clouds');
-  const wPrecip = document.getElementById('w-precip');
-  const wSky    = document.querySelector('#w-world .w-sky');
-  const wSun    = document.querySelector('#w-world .w-sun');
-
-  function paintWeather({ city, tempC, condition, humidity, wind }) {
-    document.getElementById('ep-w').textContent = city;
-    document.getElementById('w-city').textContent = city;
-    document.getElementById('w-temp').textContent = (tempC == null ? '—' : Math.round(tempC) + '°');
-    document.getElementById('w-cond').textContent = condition || '—';
-    document.getElementById('w-hum').textContent  = humidity != null ? humidity + '%' : '—';
-    document.getElementById('w-wind').textContent = wind != null ? wind + ' kph' : '—';
-
-    // Reset world
-    wClouds.innerHTML = '';
-    wPrecip.innerHTML = '';
-
-    const cond = (condition || '').toLowerCase();
-    const isRain = /rain|drizzle|shower/.test(cond);
-    const isSnow = /snow|sleet|flurr/.test(cond);
-    const isCloud = /cloud|overcast|fog|mist/.test(cond);
-    const isClear = /clear|sun/.test(cond);
-    const isStorm = /storm|thunder/.test(cond);
-
-    // Sky
-    let sky;
-    if (isStorm) sky = 'linear-gradient(180deg, #4A4754 0%, #6E6256 100%)';
-    else if (isRain) sky = 'linear-gradient(180deg, #8FA1AE 0%, #B8B19F 100%)';
-    else if (isSnow) sky = 'linear-gradient(180deg, #D6DEE4 0%, #E9E4D6 100%)';
-    else if (isCloud) sky = 'linear-gradient(180deg, #BCC8CF 0%, #E2D8BE 100%)';
-    else sky = 'linear-gradient(180deg, #B6D2DD 0%, #F0D7A8 100%)';
-    wSky.style.background = sky;
-
-    // Sun
-    gsap.to(wSun, { opacity: isClear ? 1 : (isCloud ? .35 : .15), duration: .8, ease: 'power2.out' });
-
-    // Clouds
-    const cloudCount = isStorm ? 8 : isCloud ? 6 : isRain ? 5 : 2;
-    for (let i = 0; i < cloudCount; i++) {
-      const c = document.createElement('div');
-      c.className = 'w-cloud';
-      const w = 70 + Math.random() * 140;
-      const h = 14 + Math.random() * 14;
-      c.style.width = w + 'px'; c.style.height = h + 'px';
-      c.style.top = (5 + Math.random() * 40) + '%';
-      c.style.left = (-30 + Math.random() * 120) + '%';
-      c.style.opacity = isStorm ? .6 : isCloud ? .85 : .75;
-      c.style.background = isStorm ? 'rgba(220,220,225,.7)' : 'rgba(255,255,255,.85)';
-      wClouds.appendChild(c);
-      gsap.to(c, {
-        x: '+=' + (60 + Math.random() * 200),
-        duration: 18 + Math.random() * 12,
-        ease: 'none', repeat: -1, yoyo: false,
-        onRepeat: () => { c.style.left = -40 + '%'; }
-      });
-    }
-
-    // Precipitation
-    if (isRain || isStorm) {
-      for (let i = 0; i < 60; i++) {
-        const d = document.createElement('div');
-        d.className = 'w-drop';
-        d.style.left = Math.random() * 100 + '%';
-        d.style.top  = Math.random() * 100 + '%';
-        wPrecip.appendChild(d);
-        gsap.fromTo(d, { y: -40, opacity: 0 }, {
-          y: 320, opacity: 1, duration: .8 + Math.random() * .4,
-          ease: 'power1.in', repeat: -1, delay: Math.random() * 1
-        });
+  document.querySelectorAll('[data-clip]').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      const text = btn.getAttribute('data-clip');
+      try {
+        await navigator.clipboard.writeText(text);
+      } catch {
+        const ta = document.createElement('textarea');
+        ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+        document.body.appendChild(ta); ta.select();
+        try { document.execCommand('copy'); } catch {}
+        ta.remove();
       }
-    }
-    if (isSnow) {
-      for (let i = 0; i < 40; i++) {
-        const f = document.createElement('div');
-        f.className = 'w-flake';
-        f.style.left = Math.random() * 100 + '%';
-        f.style.top  = -10 + '%';
-        wPrecip.appendChild(f);
-        gsap.to(f, {
-          y: 320, x: '+=' + (Math.random() * 40 - 20),
-          duration: 5 + Math.random() * 4,
-          ease: 'sine.inOut', repeat: -1, delay: Math.random() * 4
-        });
-      }
-    }
-
-    celebrate(document.getElementById('w-celeb'));
-  }
-
-  async function fetchWeather() {
-    const city = (wInput.value || 'Berlin').trim();
-    wBtn.disabled = true;
-    wBtn.textContent = 'Fetching…';
-    try {
-      const r = await fetch(`${API}/api/v1/weather?city=${encodeURIComponent(city)}`);
-      if (!r.ok) throw new Error('HTTP ' + r.status);
-      const d = await r.json();
-      // Adapt to whatever the API returns: try common shapes
-      const tempC =
-        d.temperature ?? d.temp ?? d.temp_c ?? d.tempC ??
-        d?.current?.temp_c ?? d?.current?.temperature ?? d?.main?.temp;
-      const condition =
-        d.condition ?? d.weather ?? d?.current?.condition?.text ??
-        (Array.isArray(d?.weather) ? d.weather[0]?.description : null) ?? 'Recorded';
-      const humidity =
-        d.humidity ?? d?.current?.humidity ?? d?.main?.humidity;
-      const wind =
-        d.wind_kph ?? d.wind ?? d?.current?.wind_kph ?? d?.wind?.speed;
-      paintWeather({ city: d.city || city, tempC, condition, humidity, wind });
-    } catch (err) {
-      paintWeather({ city, tempC: null, condition: 'Couldn\'t reach the station', humidity: null, wind: null });
-      showToast('Weather request failed — showing a fallback.');
-    } finally {
-      wBtn.disabled = false;
-      wBtn.textContent = 'Fetch';
-    }
-  }
-  wBtn.addEventListener('click', fetchWeather);
-  wInput.addEventListener('keydown', e => { if (e.key === 'Enter') fetchWeather(); });
-
-  // Auto-fetch first city when sandbox enters view
-  ScrollTrigger.create({
-    trigger: '#sandboxes', start: 'top 70%', once: true,
-    onEnter: () => { fetchWeather(); fetchSpecies(); }
+      const orig = btn.textContent;
+      btn.textContent = 'Copied';
+      btn.classList.add('copied');
+      setTimeout(() => { btn.textContent = orig || 'Copy'; btn.classList.remove('copied'); }, 1400);
+    });
   });
 
-  /* -------------------------------------------------------------------------
-     SPECIES SANDBOX
-     ------------------------------------------------------------------------- */
-  const sInput = document.getElementById('s-input');
-  const sBtn   = document.getElementById('s-btn');
-  const sTreeEl = document.getElementById('s-tree');
-  const sTitle  = document.getElementById('s-title');
-
-  function paintSpecies({ scientific, kingdom, phylum, klass, order, family, genus, species, common }) {
-    document.getElementById('ep-s').textContent = encodeURIComponent(common || scientific || '');
-    sTitle.innerHTML = `<em>${scientific || common || '—'}</em>`;
-    document.getElementById('s-king').textContent = kingdom || '—';
-    document.getElementById('s-phy').textContent  = phylum || '—';
-    document.getElementById('s-cls').textContent  = klass || '—';
-    document.getElementById('s-ord').textContent  = order || '—';
-    document.getElementById('s-fam').textContent  = family || '—';
-    document.getElementById('s-gen').textContent  = genus || '—';
-
-    // Build branching tree SVG
-    const ranks = [
-      { label: kingdom || '—', short: 'K' },
-      { label: phylum  || '—', short: 'P' },
-      { label: klass   || '—', short: 'C' },
-      { label: order   || '—', short: 'O' },
-      { label: family  || '—', short: 'F' },
-      { label: genus   || '—', short: 'G' },
-    ].filter(r => r.label && r.label !== '—');
-
-    const W = 520, H = 240;
-    let svg = `<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none">`;
-    // root trunk
-    svg += `<path class="branch" d="M${W/2},${H-10} C${W/2},${H-60} ${W/2-10},${H-100} ${W/2},${H-130}"/>`;
-    // branches
-    const branchY = H - 150;
-    const stepX = ranks.length > 1 ? (W - 80) / (ranks.length - 1) : 0;
-    ranks.forEach((r, i) => {
-      const x = 40 + i * stepX;
-      const y = branchY - (i % 2 === 0 ? 0 : 12);
-      svg += `<path class="branch b-${i}" d="M${W/2},${H-130} C${(W/2 + x)/2},${H-160} ${(W/2 + x)/2},${y+30} ${x},${y}"/>`;
-      svg += `<g class="leaf l-${i}" transform="translate(${x},${y})">
-        <ellipse cx="0" cy="-10" rx="14" ry="9" fill="#4A7043"/>
-        <ellipse cx="0" cy="-10" rx="14" ry="9" fill="none" stroke="#2E4F3A" stroke-width="1"/>
-        <text x="0" y="-7" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="9" fill="#F8F4ED">${r.short}</text>
-        <text x="0" y="14" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" fill="#2A2018">${r.label}</text>
-      </g>`;
-    });
-    svg += `</svg>`;
-    sTreeEl.innerHTML = svg;
-
-    // Animate growth
-    const branches = sTreeEl.querySelectorAll('path.branch');
-    branches.forEach(p => {
-      const len = p.getTotalLength();
-      p.style.strokeDasharray = len;
-      p.style.strokeDashoffset = len;
-    });
-    gsap.to(branches, { strokeDashoffset: 0, duration: 1.1, ease: 'power2.out', stagger: 0.08 });
-    gsap.fromTo(sTreeEl.querySelectorAll('.leaf'),
-      { opacity: 0, scale: 0, transformOrigin: '50% 50%' },
-      { opacity: 1, scale: 1, duration: .6, ease: 'back.out(2)', stagger: 0.1, delay: 0.5 });
-
-    celebrate(document.getElementById('s-celeb'));
-  }
-
-  async function fetchSpecies() {
-    const name = (sInput.value || 'Lion').trim();
-    sBtn.disabled = true; sBtn.textContent = 'Growing…';
-    try {
-      const r = await fetch(`${API}/api/v1/bio/species?name=${encodeURIComponent(name)}`);
-      if (!r.ok) throw new Error('HTTP ' + r.status);
-      const d = await r.json();
-      // Adapt to typical taxonomy payloads
-      const t = d.taxonomy || d.classification || d;
-      paintSpecies({
-        scientific: d.scientific_name || d.scientificName || d.name || name,
-        common: d.common_name || d.commonName || name,
-        kingdom: t.kingdom,
-        phylum:  t.phylum,
-        klass:   t.class || t.klass,
-        order:   t.order,
-        family:  t.family,
-        genus:   t.genus,
-        species: t.species
-      });
-    } catch (err) {
-      // Fallback to a plausible structure so the visual still works
-      paintSpecies({
-        scientific: 'Panthera leo',
-        common: name,
-        kingdom: 'Animalia', phylum: 'Chordata',
-        klass: 'Mammalia', order: 'Carnivora',
-        family: 'Felidae', genus: 'Panthera'
-      });
-      showToast('Species request fell back to a local example.');
-    } finally {
-      sBtn.disabled = false; sBtn.textContent = 'Grow';
-    }
-  }
-  sBtn.addEventListener('click', fetchSpecies);
-  sInput.addEventListener('keydown', e => { if (e.key === 'Enter') fetchSpecies(); });
-
-  /* -------------------------------------------------------------------------
-     SCREENSHOT SANDBOX
-     ------------------------------------------------------------------------- */
-  const cInput = document.getElementById('c-input');
-  const cBtn   = document.getElementById('c-btn');
-  const cFrame = document.getElementById('c-frame');
-  const cImg   = document.getElementById('c-img');
-  const cApert = document.getElementById('c-aperture');
-
-  async function capture() {
-    const url = (cInput.value || 'https://github.com').trim();
-    cBtn.disabled = true; cBtn.textContent = 'Capturing…';
-    try {
-      const ep = `${API}/api/v1/screenshot?url=${encodeURIComponent(url)}`;
-      document.getElementById('ep-c').textContent = url.replace(/^https?:\/\//, '');
-
-      // Shutter animation
-      gsap.to('#blades polygon', {
-        scale: 0.18, transformOrigin: '100px 100px',
-        duration: 0.35, ease: 'power3.in', stagger: 0.02
-      });
-      gsap.to('#lensGlint', { opacity: 0.9, duration: 0.2, delay: 0.2 });
-      await new Promise(r => setTimeout(r, 380));
-      gsap.to('#blades polygon', {
-        scale: 1, transformOrigin: '100px 100px',
-        duration: 0.5, ease: 'power3.out', stagger: 0.02
-      });
-      gsap.to('#lensGlint', { opacity: 0, duration: 0.6, delay: 0.3 });
-
-      // Show frame with image developing
-      cImg.classList.remove('developed');
-      cImg.src = '';
-      // Some screenshot APIs return JSON with an image URL; others return the image directly.
-      // Try image-as-resource first (most common).
-      cImg.onload = () => {
-        gsap.to(cFrame, { opacity: 1, duration: 0.5, ease: 'power2.out' });
-        setTimeout(() => cImg.classList.add('developed'), 60);
-        celebrate(document.getElementById('c-celeb'));
-      };
-      cImg.onerror = async () => {
-        // Try fetching JSON and reading a url field
-        try {
-          const r = await fetch(ep);
-          const d = await r.json();
-          const link = d.url || d.image || d.image_url;
-          if (link) {
-            cImg.onerror = null;
-            cImg.src = link;
-          } else { throw new Error('no image'); }
-        } catch {
-          gsap.to(cFrame, { opacity: 1, duration: 0.5 });
-          cFrame.querySelector('img').replaceWith(Object.assign(document.createElement('div'), {
-            textContent: 'Couldn\'t develop this one.',
-            style: 'display:grid;place-items:center;height:100%;font-family:JetBrains Mono,monospace;font-size:12px;color:#8a8074;'
-          }));
-          showToast('Screenshot service didn\'t return an image.');
-        }
-      };
-      cImg.src = ep;
-    } finally {
-      cBtn.disabled = false; cBtn.textContent = 'Capture';
-    }
-  }
-  cBtn.addEventListener('click', capture);
-  cInput.addEventListener('keydown', e => { if (e.key === 'Enter') capture(); });
 
   /* -------------------------------------------------------------------------
      Card hover tilt
@@ -2480,123 +2042,13 @@ footer .bottom { margin-top: 60px; padding-top: 24px; border-top: 1px solid rgba
     }, 1100);
   };
 
-  /* -------------------------------------------------------------------------
-     PLAYGROUND — premade curl commands
-     ------------------------------------------------------------------------- */
-  const SNIPPETS = {
-    weather: {
-      desc: 'Current weather for any city in the world.',
-      html: '<span class="tk-cmd">curl</span> <span class="tk-str">"https://nimbus-api-gxuc.onrender.com/api/v1/weather?city=Berlin"</span>',
-      plain: 'curl "https://nimbus-api-gxuc.onrender.com/api/v1/weather?city=Berlin"',
-      params: [
-        ['city', true, 'City name to look up — e.g. Berlin, Hannover, Tokyo.']
-      ],
-      returns: 'JSON — temperature, condition, humidity, wind, and timestamp.'
-    },
-    species: {
-      desc: 'Full taxonomy for any species — Latin or common name.',
-      html: '<span class="tk-cmd">curl</span> <span class="tk-str">"https://nimbus-api-gxuc.onrender.com/api/v1/bio/species?name=Quercus%20robur"</span>',
-      plain: 'curl "https://nimbus-api-gxuc.onrender.com/api/v1/bio/species?name=Quercus%20robur"',
-      params: [
-        ['name', true, 'Common name (Lion) or scientific name (Quercus robur).']
-      ],
-      returns: 'JSON — kingdom, phylum, class, order, family, genus, species.'
-    },
-    capture: {
-      desc: 'Screenshot any public URL as a PNG, written to disk.',
-      html: '<span class="tk-cmd">curl</span> <span class="tk-str">"https://nimbus-api-gxuc.onrender.com/api/v1/screenshot?url=https://github.com"</span> <span class="tk-key">-o</span> <span class="tk-str">page.png</span>',
-      plain: 'curl "https://nimbus-api-gxuc.onrender.com/api/v1/screenshot?url=https://github.com" -o page.png',
-      params: [
-        ['url', true, 'Fully-qualified URL to capture (must include https://).']
-      ],
-      returns: 'PNG image — binary stream, typically 1440×900.'
-    },
-    email: {
-      desc: 'Transparent proxy — forwards the query params directly to the studio mailer and streams the response back as-is.',
-      html: '<span class="tk-cmd">curl</span> <span class="tk-str">"https://nimbus-api-gxuc.onrender.com/api/v1/email?to=kareemharimech7@gmail.com&amp;subject=Hello&amp;body=It+works."</span>',
-      plain: 'curl "https://nimbus-api-gxuc.onrender.com/api/v1/email?to=kareemharimech7@gmail.com&subject=Hello&body=It+works."',
-      params: [
-        ['to',      true,  'Recipient email address.'],
-        ['subject', false, 'Email subject line.'],
-        ['body',    false, 'Email body text.']
-      ],
-      returns: 'JSON with the upstream response.'
-    }
-  };
-
-  function escapeHTML(s) {
-    return String(s).replace(/[&<>"']/g, c => ({
-      '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;'
-    }[c]));
-  }
-
-  function renderDocs(s) {
-    const rows = s.params.map(([name, required, desc]) => `
-      <tr>
-        <td class="k">${escapeHTML(name)}</td>
-        <td class="r ${required ? 'req' : ''}">${required ? 'Yes' : 'No'}</td>
-        <td class="d">${escapeHTML(desc)}</td>
-      </tr>`).join('');
-    return `
-      <div class="play-desc">${escapeHTML(s.desc)}</div>
-      <div class="play-params">
-        <span class="play-section-label">Parameters</span>
-        <table><tbody>${rows}</tbody></table>
-      </div>
-      <div class="play-returns">
-        <span class="play-section-label">Returns</span>
-        ${escapeHTML(s.returns)}
-      </div>
-    `;
-  }
-
-  const playSnippet = document.getElementById('playSnippet');
-  const playMeta    = document.getElementById('playMeta');
-  const playCopy    = document.getElementById('playCopy');
-  let currentSnippet = 'weather';
-
-  function setSnippet(key) {
-    const s = SNIPPETS[key];
-    if (!s) return;
-    currentSnippet = key;
-    // crossfade
-    gsap.to(playSnippet, {
-      opacity: 0, duration: 0.12, ease: 'power2.out',
-      onComplete: () => {
-        playSnippet.innerHTML = s.html;
-        gsap.to(playSnippet, { opacity: 1, duration: 0.18, ease: 'power2.out' });
-      }
-    });
-    playMeta.innerHTML = renderDocs(s);
-    document.querySelectorAll('.play-tab').forEach(t => {
-      t.setAttribute('aria-selected', t.dataset.play === key ? 'true' : 'false');
-    });
-  }
-
-  document.querySelectorAll('.play-tab').forEach(t => {
-    t.addEventListener('click', () => setSnippet(t.dataset.play));
+  const paField = document.getElementById('pa');
+  const paCount = document.getElementById('paCount');
+  paField.addEventListener('input', () => {
+    paCount.textContent = paField.value.length;
   });
 
-  playCopy.addEventListener('click', async () => {
-    const text = SNIPPETS[currentSnippet]?.plain || '';
-    try {
-      await navigator.clipboard.writeText(text);
-    } catch {
-      // Fallback for older browsers / non-secure contexts
-      const ta = document.createElement('textarea');
-      ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
-      document.body.appendChild(ta); ta.select();
-      try { document.execCommand('copy'); } catch {}
-      ta.remove();
-    }
-    playCopy.textContent = 'Copied';
-    playCopy.classList.add('copied');
-    setTimeout(() => { playCopy.textContent = 'Copy'; playCopy.classList.remove('copied'); }, 1400);
-  });
-
-  setSnippet('weather');
-
-  document.getElementById('pa').addEventListener('focus', () => {
+  paField.addEventListener('focus', () => {
     const plane = document.getElementById('plane');
     gsap.to(plane, { y: -4, rotate: -4, duration: 0.7, ease: 'sine.inOut', repeat: -1, yoyo: true });
   });
