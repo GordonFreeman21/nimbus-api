@@ -28,7 +28,7 @@ Returns current weather for a city. No API key needed.
 | `nimbus_message` | Playful weather message |
 
 ```bash
-curl "https://nimbus-api-gxuc.onrender.com//api/v1/weather?city=Berlin"
+curl "https://nimbus-api-gxuc.onrender.com/api/v1/weather?city=Berlin"
 ```
 
 ### `GET /api/v1/bio/species?name={name}`
@@ -46,7 +46,7 @@ Search for any animal or plant by common name and get its full scientific taxono
 | `family` | Taxonomic family |
 
 ```bash
-curl https://nimbus-api-gxuc.onrender.com//api/v1/bio/species?name=Blue+Whale"
+curl https://nimbus-api-gxuc.onrender.com/api/v1/bio/species?name=Blue+Whale"
 ```
 
 **Response:**
@@ -71,7 +71,7 @@ Captures a real-time PNG screenshot of any public website. Uses headless Chrome 
 | `url` | Full URL starting with `http://` or `https://` |
 
 ```bash
-curl "https://nimbus-api-gxuc.onrender.com//api/v1/screenshot?url=https://example.com" --output screenshot.png
+curl "https://nimbus-api-gxuc.onrender.com/api/v1/screenshot?url=https://example.com" --output screenshot.png
 ```
 
 **Notes:**
