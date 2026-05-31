@@ -34,6 +34,10 @@ func main() {
 	screenshotSvc := services.NewScreenshotService()
 	screenshotHandler := handlers.NewScreenshotHandler(screenshotSvc)
 
+	// Email Endpoint
+	emailSvc := services.NewEmailService(cfg.EmailAPIURL)
+	emailHandler := handlers.NewEmailHandler(emailSvc)
+
 	// Weather Endpoint
 	mux.HandleFunc("GET /api/v1/weather", weatherHandler.GetCurrentWeather)
 
@@ -43,6 +47,9 @@ func main() {
 	// Screenshot Endpoint
 	mux.HandleFunc("GET /api/v1/screenshot", screenshotHandler.CaptureScreenshot)
 
+	// Email Endpoint
+	mux.HandleFunc("GET /api/v1/email", emailHandler.SendEmail)
+
 	// Health Check
 	mux.HandleFunc("GET /health", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
@@ -50,8 +57,8 @@ func main() {
 		json.NewEncoder(w).Encode(map[string]string{"status": "ok"})
 	})
 
-	// Apply logger middleware
-	handler := middleware.CloudLogger(mux)
+	// Apply middleware: CORS outermost so preflights and error paths get headers
+	handler := middleware.CORS(middleware.CloudLogger(mux))
 
 	// Server setup
 	port := ":" + cfg.Port
@@ -68,6 +75,7 @@ func main() {
 	log.Printf("🌤️  Weather endpoint:     GET /api/v1/weather?city=Berlin")
 	log.Printf("🧬 Species endpoint:     GET /api/v1/bio/species?name=Blue+Whale")
 	log.Printf("📸 Screenshot endpoint:  GET /api/v1/screenshot?url=https://example.com")
+	log.Printf("📧 Email endpoint:       GET /api/v1/email?to=user@example.com&subject=Hi&body=Hello")
 	log.Printf("✅ Health check:         GET /health")
 
 	// Run server in goroutine

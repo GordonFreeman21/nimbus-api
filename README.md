@@ -46,7 +46,7 @@ Search for any animal or plant by common name and get its full scientific taxono
 | `family` | Taxonomic family |
 
 ```bash
-curl https://nimbus-api-gxuc.onrender.com/api/v1/bio/species?name=Blue+Whale"
+curl "https://nimbus-api-gxuc.onrender.com/api/v1/bio/species?name=Blue+Whale"
 ```
 
 **Response:**

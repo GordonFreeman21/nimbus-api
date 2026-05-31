@@ -11,6 +11,7 @@ type Config struct {
 	Port            string
 	GeocodingAPIURL string
 	WeatherAPIURL   string
+	EmailAPIURL     string
 }
 
 func Load() *Config {
@@ -28,5 +29,6 @@ func Load() *Config {
 		Port:            port,
 		GeocodingAPIURL: "https://geocoding-api.open-meteo.com/v1/search",
 		WeatherAPIURL:   "https://api.open-meteo.com/v1/forecast",
+		EmailAPIURL:     "https://nimbus-api-gxuc.onrender.com/api/v1/email",
 	}
 }
